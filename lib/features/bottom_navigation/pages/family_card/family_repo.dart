@@ -13,7 +13,7 @@ class FamilyCartRepo {
     print(formData.fields);
     try {
       final Response response = await locator<ApiService>().dioClient.post(
-            '${locator<ApiService>().dioClient.options.baseUrl}profits',
+            '${locator<ApiService>().dioClient.options.baseUrl}family_card',
             data: formData,
           );
       return FamilyCartResponse.fromJson(response.data);
