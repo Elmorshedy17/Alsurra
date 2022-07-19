@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1009693270089",
+    "project_id": "alsurrah-f8145",
+    "storage_bucket": "alsurrah-f8145.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009693270089:android:c747d791024530d677df98",
+        "android_client_info": {
+          "package_name": "com.app.alsurrah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009693270089-h3nskc5lj2s0ruj6oindoit6s7r1kkpc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.alsurrah",
+            "certificate_hash": "f6f4589986f798e8e1412315e5437a6b9291b36a"
+          }
+        },
+        {
+          "client_id": "1009693270089-8omuv01lpuf222p8peh10gstuea8otil.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpkyDeRE_3oprLjp7hzG7VxaAETAZWqC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009693270089-8omuv01lpuf222p8peh10gstuea8otil.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

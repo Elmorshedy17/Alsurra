@@ -1,0 +1,42 @@
+abstract class AppRoutesNames {
+  static const String mainTabsWidget = '/mainTabsWidget';
+  static const String resetPasswordPage = '/resetPasswordPage';
+  static const String newsPage = '/NewsPage';
+  static const String newsDetailsPage = '/NewsDetailsPage';
+  static const String activitiesPage = '/activitiesPage';
+  static const String activitiesDetailsPage = '/activitiesDetailsPage';
+  static const String managementPage = '/ManagementPage';
+  static const String festivalsPage = '/FestivalsPage';
+  static const String festivalDetailsPage = '/FestivalDetailsPage';
+  static const String courseDetailsPage = '/CourseDetailsPage';
+  static const String coursesPage = '/CoursesPage';
+  static const String offersAndDiscountsPage = '/OffersAndDiscountsPage';
+  static const String offerOrDiscountPage = '/OfferOrDiscountPage';
+  static const String hotelAndChaletsPage = '/HotelAndChaletsPage';
+  static const String hotelOrChaletPage = '/HotelOrChaletPage';
+  static const String playgroundDetailsPage = '/playgroundDetailsPage';
+  static const String loginPage = '/LoginPage';
+  static const String registerPage = '/RegisterPage';
+  static const String forgotPasswordPage = '/ForgotPasswordPage';
+  static const String galleryPage = '/galleryPage';
+  static const String galleryDetailsPage = '/galleryDetailsPage';
+  static const String barcodePage = '/barcodePage';
+  static const String reportProductPage = '/ReportProductPage';
+  static const String myAccount = '/MyAccount';
+  static const String accountDetailsPage = '/AccountDetailsPage';
+  static const String branchesPage = '/BranchesPage';
+  static const String settingsPage = '/SettingsPage';
+  static const String pagesPage = '/PagesPage';
+  static const String faqPage = '/FAQPage';
+  static const String contactUsPage = '/ContactUsPage';
+  static const String notificationsPage = '/NotificationsPage';
+  static const String familyCardPage = '/FamilyCardPage';
+  static const String familyCardResultsPage = '/FamilyCardResultsPage';
+  static const String searchPage = '/SearchPage';
+  static const String adsPage = '/adsPage';
+  static const String introPage = '/introPage';
+  static const String fixPage = '/fixPage';
+  static const String profitsPage = '/profitsPage';
+  static const String profitsResultsPage = '/profitsResultsPage';
+}
+
