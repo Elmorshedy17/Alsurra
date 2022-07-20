@@ -17,6 +17,8 @@ class AccountDetailsManager extends Manager<AuthResponse> {
 
   TextEditingController boxController = TextEditingController();
 
+  TextEditingController civilIdController = TextEditingController();
+
   String? errorDescription;
   final _prefs = locator<PrefsService>();
 
@@ -63,22 +65,25 @@ class AccountDetailsManager extends Manager<AuthResponse> {
   }
 
   final BehaviorSubject<AccountDetailsResponse> _subject =
-      BehaviorSubject<AccountDetailsResponse>();
+  BehaviorSubject<AccountDetailsResponse>();
   Stream<AccountDetailsResponse> get accountDetails$ => _subject.stream;
 
   execute() {
     Stream.fromFuture(AccountDetailsRepo.accountDetails()).listen((result) {
       if (result.error == null) {
         nameController =
-            TextEditingController(text: "${result.data!.user!.name}");
+            TextEditingController(text: result.data!.user!.name??"");
         print("XXXXXXXXXXXXXXXXXX ${result.data!.user!.name}");
         phoneController =
-            TextEditingController(text: "${result.data!.user!.phone}");
+            TextEditingController(text: result.data!.user!.phone??"");
         emailController =
-            TextEditingController(text: "${result.data!.user!.email}");
+            TextEditingController(text: result.data!.user!.email??"");
         boxController =
-            TextEditingController(text: "${result.data!.user!.box}");
+            TextEditingController(text: result.data!.user!.box??"");
+        civilIdController =
+            TextEditingController(text: result.data!.user!.civilId??"");
         _subject.sink.add(result);
+
       } else {
         _subject.sink.addError(result.error);
       }

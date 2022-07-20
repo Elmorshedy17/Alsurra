@@ -1,7 +1,7 @@
 class AccountRequest {
-  String? phone,password,name,email,box;
+  String? phone,password,name,email,box,civilId;
 
-  AccountRequest({this.phone, this.password,this.email,this.name,this.box});
+  AccountRequest({this.phone, this.password,this.email,this.name,this.box,this.civilId});
 
   AccountRequest.fromJson(Map<String, dynamic> json) {
     phone = json['phone'];
@@ -9,6 +9,7 @@ class AccountRequest {
     name = json['name'];
     email = json['email'];
     box = json['box'];
+    civilId = json['civil_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -18,6 +19,7 @@ class AccountRequest {
     data['name'] = name;
     data['email'] = email;
     data['box'] = box;
+    data['civil_id'] = civilId;
     return data;
   }
 }
