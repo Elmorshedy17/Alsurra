@@ -10,6 +10,8 @@ import 'package:rxdart/rxdart.dart';
 
 class FamilyCartManager extends Manager<FamilyCartResponse> {
   // FamilyCartResponse? familyCartResponse;
+  final _toast = locator<ToastTemplate>();
+  // final String msg = "";
 
   final FamilyCartRepo _familyCartRepo = FamilyCartRepo();
   final _prefs = locator<PrefsService>();
@@ -34,7 +36,8 @@ class FamilyCartManager extends Manager<FamilyCartResponse> {
         managerState = ManagerState.success;
       } else if (result.status == 0) {
         inState.add(ManagerState.error);
-        errorDescription = result.message;
+        errorDescription = result.message??"";
+        _toast.show("$errorDescription");
         managerState = ManagerState.error;
       } else if (result.error.error is SocketException) {
         inState.add(ManagerState.socketError);
@@ -51,6 +54,14 @@ class FamilyCartManager extends Manager<FamilyCartResponse> {
       }
     });
     return managerState;
+  }
+
+  void execute(){
+    familyCart(
+      request: FamilyCartRequest(
+          cardId: "${locator<PrefsService>().userObj!.box}"),
+      // cardId: "740",)
+    );
   }
 
   @override

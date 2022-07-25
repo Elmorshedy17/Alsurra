@@ -3,7 +3,7 @@ class User {
   String? name;
   String? email;
   String? phone;
-  String? card;
+  // String? card;
   String? authorization;
   String? box;
   String? civilId;
@@ -13,7 +13,7 @@ class User {
         this.name,
         this.email,
         this.phone,
-        this.card,
+        // this.card,
         this.box,
         this.civilId,
         this.authorization});
@@ -23,7 +23,7 @@ class User {
     name = json['name'];
     email = json['email'];
     phone = json['phone'];
-    card = json['card'];
+    // card = json['card'];
     box = json['box'];
     authorization = json['authorization'];
     civilId = json['civil_id'];
@@ -35,7 +35,7 @@ class User {
     data['name'] = name;
     data['email'] = email;
     data['phone'] = phone;
-    data['card'] = card;
+    // data['card'] = card;
     data['box'] = box;
     data['authorization'] = authorization;
     data['civil_id'] = civilId;

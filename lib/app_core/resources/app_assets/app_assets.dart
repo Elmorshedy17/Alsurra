@@ -58,5 +58,5 @@ abstract class AppAssets {
   static const String logout = 'assets/images/log_out.svg';
   static const String ooo = 'assets/images/ooo.png';
   static const String bigLogo = 'assets/images/big_logo.png';
-  static const String familyCardCard = 'assets/images/profits.png';
+  static const String familyCardCard = 'assets/images/family_card.png';
 }

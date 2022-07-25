@@ -18,6 +18,7 @@ class ProfitsManager extends Manager<ProfitsResponse> {
   final ProfitsRepo _profitsRepo = ProfitsRepo();
   final _prefs = locator<PrefsService>();
   String? errorDescription;
+  final _toast = locator<ToastTemplate>();
 
   final PublishSubject<ManagerState> _stateSubject = PublishSubject();
 
@@ -38,7 +39,9 @@ class ProfitsManager extends Manager<ProfitsResponse> {
         managerState = ManagerState.success;
       } else if (result.status == 0) {
         inState.add(ManagerState.error);
-        errorDescription = result.message;
+        errorDescription = result.message??"";
+        _toast.show("$errorDescription");
+
         managerState = ManagerState.error;
       } else if (result.error.error is SocketException) {
         inState.add(ManagerState.socketError);
@@ -55,6 +58,14 @@ class ProfitsManager extends Manager<ProfitsResponse> {
       }
     });
     return managerState;
+  }
+
+  void execute(){
+    profits(
+      request: ProfitsRequest(
+          cardId: "${locator<PrefsService>().userObj!.box}"),
+      // cardId: "740",)
+    );
   }
 
   @override
