@@ -111,7 +111,7 @@ class FixedSection {
       },
     ),
     FixedSection(
-      title: 'اﻷنشطة',
+      title: 'النوادي',
       image: AppAssets.event_1,
       backgroundColor: const Color(0xff305EA4),
       onClick: () {

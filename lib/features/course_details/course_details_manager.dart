@@ -1,6 +1,8 @@
 import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/features/course_details/course_details_repo.dart';
 import 'package:alsurrah/features/course_details/course_details_response.dart';
+import 'package:alsurrah/shared/show_zoomable_enum/show_zoomable_enum.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CourseDetailsManager extends Manager<CourseDetailsResponse> {
@@ -27,6 +29,14 @@ class CourseDetailsManager extends Manager<CourseDetailsResponse> {
       }
     });
   }
+
+  //****************************************************************************
+  final ValueNotifier<ShowZoomable> _showZoomableNotifier =
+  ValueNotifier<ShowZoomable>(ShowZoomable.hide);
+  ValueNotifier<ShowZoomable> get showZoomableNotifier => _showZoomableNotifier;
+  ShowZoomable get showZoomable => _showZoomableNotifier.value;
+  set showZoomable(ShowZoomable val) => _showZoomableNotifier.value = val;
+  //****************************************************************************
 
   @override
   void dispose() {}

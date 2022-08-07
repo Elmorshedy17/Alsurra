@@ -36,7 +36,7 @@ class ActivityItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   NetworkAppImage(
-                    height: 150.h,
+                    height: 190.h,
                     width: double.infinity,
                     boxFit: BoxFit.fill,
                     // imageColor: Colors.red,

@@ -18,6 +18,20 @@ abstract class AppStyle {
   static const Color darkGrey = Color(0xff4F4F4F);
   static const Color mediumGrey = Color(0xff7D7E80);
 
+
+/*  static Map<int, Color> darkOrangeMAterial = {
+    50: const Color.fromRGBO(222, 57, 157, 0.1),
+    100: const Color.fromRGBO(222, 57, 157, 0.2),
+    200: const Color.fromRGBO(222, 57, 157, 0.3),
+    300: const Color.fromRGBO(9, 78, 143, 0.4),
+    400: const Color.fromRGBO(9, 78, 143, 0.5),
+    500: const Color.fromRGBO(9, 78, 143, 0.6),
+    600: const Color.fromRGBO(9, 78, 143, 0.7),
+    700: const Color.fromRGBO(9, 78, 143, 0.8),
+    800: const Color.fromRGBO(9, 78, 143, 0.9),
+    900: const Color.fromRGBO(222, 57, 157, 1),
+  };*/
+
   ////////////////////////////////////////////////
   ///To turn any color to material.
 ////////////////////////////////////////////////

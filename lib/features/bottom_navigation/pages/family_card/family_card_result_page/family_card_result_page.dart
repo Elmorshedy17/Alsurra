@@ -75,7 +75,7 @@ class _FamilyCardResultsPageState extends State<FamilyCardResultsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                height: 20.h,
+                                height: 45.h,
                               ),
                               Text(
                                 "${args.familyCartResponse!.data!.card!.id}",

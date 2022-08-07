@@ -101,7 +101,7 @@ class _CoursesPageState extends State<CoursesPage> {
                                 color: AppStyle.darkOrange,
                                 size: 100,
                               ),
-                              title: 'لا توجد أنشطة متاحة',
+                              title: 'لا توجد دورات متاحة',
                               titleTextStyle: AppFontStyle.biggerBlueLabel
                                   .copyWith(
                                       fontSize: 18.sp,

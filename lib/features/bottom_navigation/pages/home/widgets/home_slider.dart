@@ -117,42 +117,69 @@ class _HomeSliderState extends State<HomeSlider> {
                     ),
                   ),
                   Positioned(
-                    bottom: 10,
+                    bottom: 7,
                     left: 0,
                     right: 0,
-                    child: StreamBuilder(
-                        initialData: 0,
-                        stream: indicatorIndex$,
-                        builder: (context, indexSnapshot) {
-                          return SizedBox(
-                            height: 7,
-                            child: Center(
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  // itemCount: widget.sliderList!.length,
-                                  itemCount: homeSnapshot.data!.slider!.length > 1
-                                      ? homeSnapshot.data!.slider!.length
-                                      : 0,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: indexSnapshot.data == index
-                                            ? AppStyle.darkOrange
-                                            : AppStyle.darkOrange.withOpacity(0.5),
-                                        // : AppStyle.orange.withOpacity(0.5),
-                                        borderRadius: BorderRadius.circular(20.0),
-                                      ),
-                                      // height: 4,
-                                      width: indexSnapshot.data == index ? 30 : 12,
-                                      margin:
-                                      const EdgeInsets.symmetric(horizontal: 3),
-                                      // padding: EdgeInsets.symmetric(horizontal: 5),
-                                    );
-                                  }),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: (){
+                                openURL("https://alsurracoop.com");
+                                // http://dahmnstore.com/
+                              },
+                              child:const Card(
+                                elevation: 4,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                                  child: Center(
+                                    child: Text("اطلب الان"),
+                                  ),
+                                ),
+                              ),
                             ),
-                          );
-                        }),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 7,
+                        ),
+                        StreamBuilder(
+                            initialData: 0,
+                            stream: indicatorIndex$,
+                            builder: (context, indexSnapshot) {
+                              return SizedBox(
+                                height: 7,
+                                child: Center(
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      // itemCount: widget.sliderList!.length,
+                                      itemCount: homeSnapshot.data!.slider!.length > 1
+                                          ? homeSnapshot.data!.slider!.length
+                                          : 0,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            color: indexSnapshot.data == index
+                                                ? AppStyle.darkOrange
+                                                : AppStyle.darkOrange.withOpacity(0.5),
+                                            // : AppStyle.orange.withOpacity(0.5),
+                                            borderRadius: BorderRadius.circular(20.0),
+                                          ),
+                                          // height: 4,
+                                          width: indexSnapshot.data == index ? 30 : 12,
+                                          margin:
+                                          const EdgeInsets.symmetric(horizontal: 3),
+                                          // padding: EdgeInsets.symmetric(horizontal: 5),
+                                        );
+                                      }),
+                                ),
+                              );
+                            }),
+                      ],
+                    ),
                   )
                 ],
               )

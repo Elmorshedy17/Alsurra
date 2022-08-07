@@ -2,7 +2,6 @@ class PlaygroundDetailsResponse {
   int? status;
   String? message;
   Data? data;
-
   dynamic error;
   String? errorMsg;
 
@@ -20,7 +19,17 @@ class PlaygroundDetailsResponse {
   PlaygroundDetailsResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
   }
 }
 
@@ -31,8 +40,16 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     playground = json['playground'] != null
-        ? Playground.fromJson(json['playground'])
+        ? new Playground.fromJson(json['playground'])
         : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.playground != null) {
+      data['playground'] = this.playground!.toJson();
+    }
+    return data;
   }
 }
 
@@ -43,28 +60,28 @@ class Playground {
   String? desc;
   String? price;
   String? image;
-  StartAndEndTimes? sat;
-  StartAndEndTimes? sun;
-  StartAndEndTimes? mon;
-  StartAndEndTimes? tue;
-  StartAndEndTimes? wed;
-  StartAndEndTimes? thu;
-  StartAndEndTimes? fri;
+  List<String>? fri;
+  List<String>? thu;
+  List<String>? wed;
+  List<String>? tue;
+  List<String>? mon;
+  List<String>? sun;
+  List<String>? sat;
 
   Playground(
       {this.id,
-      this.name,
-      this.game,
-      this.desc,
-      this.price,
-      this.image,
-      this.sat,
-      this.sun,
-      this.mon,
-      this.tue,
-      this.wed,
-      this.thu,
-      this.fri});
+        this.name,
+        this.game,
+        this.desc,
+        this.price,
+        this.image,
+        this.fri,
+        this.thu,
+        this.wed,
+        this.tue,
+        this.mon,
+        this.sun,
+        this.sat});
 
   Playground.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -73,24 +90,31 @@ class Playground {
     desc = json['desc'];
     price = json['price'];
     image = json['image'];
-    sat = json['sat'] != null ? StartAndEndTimes.fromJson(json['sat']) : null;
-    sun = json['sun'] != null ? StartAndEndTimes.fromJson(json['sun']) : null;
-    mon = json['mon'] != null ? StartAndEndTimes.fromJson(json['mon']) : null;
-    tue = json['tue'] != null ? StartAndEndTimes.fromJson(json['tue']) : null;
-    wed = json['wed'] != null ? StartAndEndTimes.fromJson(json['wed']) : null;
-    thu = json['thu'] != null ? StartAndEndTimes.fromJson(json['thu']) : null;
-    fri = json['fri'] != null ? StartAndEndTimes.fromJson(json['fri']) : null;
+    fri = json['fri'].cast<String>();
+    thu = json['thu'].cast<String>();
+    wed = json['wed'].cast<String>();
+    tue = json['tue'].cast<String>();
+    mon = json['mon'].cast<String>();
+    sun = json['sun'].cast<String>();
+    sat = json['sat'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['game'] = this.game;
+    data['desc'] = this.desc;
+    data['price'] = this.price;
+    data['image'] = this.image;
+    data['fri'] = this.fri;
+    data['thu'] = this.thu;
+    data['wed'] = this.wed;
+    data['tue'] = this.tue;
+    data['mon'] = this.mon;
+    data['sun'] = this.sun;
+    data['sat'] = this.sat;
+    return data;
   }
 }
 
-class StartAndEndTimes {
-  String? start;
-  String? end;
-
-  StartAndEndTimes({this.start, this.end});
-
-  StartAndEndTimes.fromJson(Map<String, dynamic> json) {
-    start = json['start'];
-    end = json['end'];
-  }
-}

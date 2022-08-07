@@ -60,6 +60,7 @@ dependencies:
   firebase_core: ^1.13.1
   firebase_messaging: ^11.2.11
   flutter_local_notifications: ^9.3.3
+  flutter_rounded_date_picker: ^3.0.1
 
     #  google_fonts: ^3.0.1
   photo_view: ^0.14.0

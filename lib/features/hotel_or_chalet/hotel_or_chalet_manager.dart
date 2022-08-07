@@ -2,6 +2,7 @@ import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/app_core/resources/app_style/app_style.dart';
 import 'package:alsurrah/features/hotel_or_chalet/hotel_or_chalet_repo.dart';
 import 'package:alsurrah/features/hotel_or_chalet/hotel_or_chalet_response.dart';
+import 'package:alsurrah/shared/show_zoomable_enum/show_zoomable_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
@@ -78,6 +79,14 @@ class HotelOrChaletManager extends Manager<HotelOrChaletResponse> {
     var outputFormat = DateFormat('yyyy-MM-dd');
     return outputFormat.format(inputDate);
   }
+
+  //****************************************************************************
+  final ValueNotifier<ShowZoomable> _showZoomableNotifier =
+  ValueNotifier<ShowZoomable>(ShowZoomable.hide);
+  ValueNotifier<ShowZoomable> get showZoomableNotifier => _showZoomableNotifier;
+  ShowZoomable get showZoomable => _showZoomableNotifier.value;
+  set showZoomable(ShowZoomable val) => _showZoomableNotifier.value = val;
+  //****************************************************************************
 
   @override
   void dispose() {}

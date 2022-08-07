@@ -47,7 +47,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           showNotification: false,
           showBack: true,
           showSearch: true,
-          title: "اﻷنشطة",
+          title: "الدورات",
         ),
         // ),
       ),
@@ -100,7 +100,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                                 color: AppStyle.darkOrange,
                                 size: 100,
                               ),
-                              title: 'لا توجد أنشطة متاحة',
+                              title: 'لا توجد دورات متاحة',
                               titleTextStyle: AppFontStyle.biggerBlueLabel
                                   .copyWith(
                                       fontSize: 18.sp,

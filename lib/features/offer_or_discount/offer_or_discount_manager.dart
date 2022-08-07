@@ -1,6 +1,8 @@
 import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/features/offer_or_discount/offer_or_discount_repo.dart';
 import 'package:alsurrah/features/offer_or_discount/offer_or_discount_response.dart';
+import 'package:alsurrah/shared/show_zoomable_enum/show_zoomable_enum.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class OfferOrDiscountManager extends Manager<OfferOrDiscountResponse> {
@@ -20,6 +22,14 @@ class OfferOrDiscountManager extends Manager<OfferOrDiscountResponse> {
       }
     });
   }
+
+  //****************************************************************************
+  final ValueNotifier<ShowZoomable> _showZoomableNotifier =
+  ValueNotifier<ShowZoomable>(ShowZoomable.hide);
+  ValueNotifier<ShowZoomable> get showZoomableNotifier => _showZoomableNotifier;
+  ShowZoomable get showZoomable => _showZoomableNotifier.value;
+  set showZoomable(ShowZoomable val) => _showZoomableNotifier.value = val;
+  //****************************************************************************
 
   @override
   void dispose() {}

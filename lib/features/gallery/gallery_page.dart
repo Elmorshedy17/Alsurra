@@ -72,8 +72,8 @@ class _GalleryPageState extends State<GalleryPage> {
                           itemCount: galleryManager.galleryList.length,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.9,
+                                  crossAxisCount: 1,
+                                  childAspectRatio: 1.1,
                                   crossAxisSpacing: 20,
                                   mainAxisSpacing: 20),
                           itemBuilder: (_, index) => GalleryItem(

@@ -1,3 +1,5 @@
+
+
 class FestivalDetailsResponse {
   int? status;
   String? message;
@@ -57,6 +59,7 @@ class Offer {
   String? startDate;
   String? endDate;
   String? image;
+  List<String>? images;
 
   Offer(
       {this.id,
@@ -64,7 +67,8 @@ class Offer {
         this.desc,
         this.startDate,
         this.endDate,
-        this.image});
+        this.image,
+        this.images});
 
   Offer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -73,6 +77,7 @@ class Offer {
     startDate = json['start_date'];
     endDate = json['end_date'];
     image = json['image'];
+    images = json['images'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +88,8 @@ class Offer {
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
     data['image'] = this.image;
+    data['images'] = this.images;
     return data;
   }
 }
+

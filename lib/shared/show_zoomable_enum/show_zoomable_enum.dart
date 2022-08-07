@@ -1,0 +1,4 @@
+enum ShowZoomable {
+  show,
+  hide,
+}

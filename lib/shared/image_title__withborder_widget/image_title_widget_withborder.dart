@@ -29,7 +29,7 @@ class ImageTitleBorder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 NetworkAppImage(
-                  height: 140.h,
+                  height: 230.h,
                   width: double.infinity,
                   boxFit: BoxFit.fill,
                   // imageColor: Colors.red,

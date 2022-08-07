@@ -100,7 +100,7 @@ class _FestivalsPageState extends State<FestivalsPage> {
                                 color: AppStyle.darkOrange,
                                 size: 100,
                               ),
-                              title: 'لا توجد اخبار متاحة',
+                              title: 'لا توجد مهرجانات / عروض متاحة',
                               titleTextStyle: AppFontStyle.biggerBlueLabel
                                   .copyWith(
                                       fontSize: 18.sp,

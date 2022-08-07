@@ -6,6 +6,7 @@ import 'package:alsurrah/features/gallery_details/gallery_details_manager.dart';
 import 'package:alsurrah/features/gallery_details/gallery_details_response.dart';
 import 'package:alsurrah/shared/alsurrah_app_bar/alsurrah_app_bar.dart';
 import 'package:alsurrah/shared/not_available_widget/not_available_widget.dart';
+import 'package:alsurrah/shared/show_zoomable_enum/show_zoomable_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,6 +40,8 @@ class _GalleryDetailsPageState extends State<GalleryDetailsPage> {
       }
       // context.use<NewsDetailsManager>().execute(newsId: args!.newsId);
     });
+    locator<GalleryDetailsManager>().showZoomable =
+        ShowZoomable.hide;
   }
 
   @override
@@ -92,15 +95,15 @@ class _GalleryDetailsPageState extends State<GalleryDetailsPage> {
                             Positioned.fill(
                               child: GridView.builder(
                                 shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
+                                // physics: const NeverScrollableScrollPhysics(),
                                 padding: const EdgeInsets.only(
                                     top: 24, bottom: 15, right: 15, left: 15),
                                 itemCount: galleryDetailsSnapshot
                                     .data!.gallery!.images!.length,
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        childAspectRatio: 1.0,
+                                        crossAxisCount: 1,
+                                        childAspectRatio: 1.1,
                                         crossAxisSpacing: 7,
                                         mainAxisSpacing: 7),
                                 itemBuilder: (_, index) => GalleryItem(
@@ -125,13 +128,13 @@ class _GalleryDetailsPageState extends State<GalleryDetailsPage> {
                                     Positioned.fill(
                                       child: PhotoView(
                                         backgroundDecoration:
-                                            const BoxDecoration(
-                                                color: Colors.black38),
-                                        minScale: 0.3.sp,
-                                        tightMode: true,
+                                        const BoxDecoration(
+                                            color: Colors.black38),
+                                        minScale: PhotoViewComputedScale.contained * 0.3,
+                                        initialScale: PhotoViewComputedScale.contained * 0.8,
                                         imageProvider: NetworkImage(
-                                          selectedImage,
-                                          // "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/rivet-emerly-media-console-1610578756.jpg?crop=1xw:1xh;center,top&resize=768:*",
+                                            selectedImage,
+                                            scale: 1
                                         ),
                                       ),
                                     ),

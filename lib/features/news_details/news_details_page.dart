@@ -4,10 +4,12 @@ import 'package:alsurrah/features/news_details/news_details_manager.dart';
 import 'package:alsurrah/features/news_details/news_details_response.dart';
 import 'package:alsurrah/shared/alsurrah_app_bar/alsurrah_app_bar.dart';
 import 'package:alsurrah/shared/network_app_image/network_app_image.dart';
+import 'package:alsurrah/shared/show_zoomable_enum/show_zoomable_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:photo_view/photo_view.dart';
 
 class NewsDetailsArgs {
   final int newsId;
@@ -24,6 +26,7 @@ class NewsDetailsPage extends StatefulWidget {
 }
 
 class _NewsDetailsPageState extends State<NewsDetailsPage> {
+  String selectedImage = '';
   NewsDetailsArgs? args;
   @override
   void initState() {
@@ -35,6 +38,9 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       }
       // context.use<NewsDetailsManager>().execute(newsId: args!.newsId);
     });
+
+    locator<NewsDetailsManager>().showZoomable =
+        ShowZoomable.hide;
   }
 
   @override
@@ -66,39 +72,91 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
             newsDetailsManager.execute(newsId: args!.newsId);
           },
           onSuccess: (context, newsDetailsSnapshot) {
-            return ListView(
-              children: [
-                NetworkAppImage(
-                  height: 200.h,
-                  width: double.infinity,
-                  boxFit: BoxFit.fill,
-                  imageUrl: '${newsDetailsSnapshot.data!.news!.image}',
-                  // imageUrl: '${e}',
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      Text(
-                        '${newsDetailsSnapshot.data!.news?.name}',
-                        style: AppFontStyle.biggerBlueLabel,
-                      ),
-                      // const SizedBox(
-                      //   height: 5,
-                      // ),
-                      Html(
-                        data: '${newsDetailsSnapshot.data!.news?.desc}',
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
+            return
+
+              ValueListenableBuilder<ShowZoomable>(
+                  valueListenable:
+                  newsDetailsManager.showZoomableNotifier,
+                  builder: (context, value, _) {
+                    return Stack(
+                      children: [
+                          ListView(
+                          children: [
+                            InkWell(
+                              onTap: (){
+                                selectedImage = '${newsDetailsSnapshot.data!.news!.image}';
+                                newsDetailsManager.showZoomable =
+                                    ShowZoomable.show;
+                              },
+                              child: NetworkAppImage(
+                                height: 300.h,
+                                width: double.infinity,
+                                boxFit: BoxFit.fill,
+                                imageUrl: '${newsDetailsSnapshot.data!.news!.image}',
+                                // imageUrl: '${e}',
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                                  Text(
+                                    '${newsDetailsSnapshot.data!.news?.name}',
+                                    style: AppFontStyle.biggerBlueLabel,
+                                  ),
+                                  // const SizedBox(
+                                  //   height: 5,
+                                  // ),
+                                  Html(
+                                    data: '${newsDetailsSnapshot.data!.news?.desc}',
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        if (value == ShowZoomable.show)
+                          Positioned.fill(
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: PhotoView(
+                                    backgroundDecoration:
+                                    const BoxDecoration(
+                                        color: Colors.black38),
+                                    minScale: PhotoViewComputedScale.contained * 0.3,
+                                    initialScale: PhotoViewComputedScale.contained * 0.8,
+                                    imageProvider: NetworkImage(
+                                        selectedImage,
+                                        scale: 1
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 30,
+                                  left: 30,
+                                  child: FloatingActionButton(
+                                    // mini: true,
+                                    onPressed: () {
+                                      newsDetailsManager.showZoomable =
+                                          ShowZoomable.hide;
+                                    },
+                                    child: const Icon(Icons.close),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    );
+                  });
+              
+            
           }),
     );
   }

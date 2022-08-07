@@ -26,7 +26,7 @@ class ApiService {
   ];
   final Dio dioClient = Dio(
     BaseOptions(
-      baseUrl: 'https://alsurracoop.com/api/',
+      baseUrl: 'https://alsurracoop.net/api/',
 
       connectTimeout: 60000,
       receiveTimeout: 60000,
