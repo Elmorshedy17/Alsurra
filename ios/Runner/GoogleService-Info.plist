@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1009693270089-ffh1pvsglkq6el1goqo3emq553dsg4jq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1009693270089-ffh1pvsglkq6el1goqo3emq553dsg4jq</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1009693270089-h3nskc5lj2s0ruj6oindoit6s7r1kkpc.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBNe8bkPqyudZowZhxnL1O7o4GCd7HqHk4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1009693270089</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.app.alsurrah</string>
+	<key>PROJECT_ID</key>
+	<string>alsurrah-f8145</string>
+	<key>STORAGE_BUCKET</key>
+	<string>alsurrah-f8145.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1009693270089:ios:e376cddabc6b6c0e77df98</string>
+</dict>
+</plist>
