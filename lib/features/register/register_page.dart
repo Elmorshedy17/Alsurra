@@ -1,3 +1,5 @@
+import 'package:alsurrah/features/check_box_agreement/check_box_agreement_manager.dart';
+import 'package:alsurrah/features/check_box_agreement/check_box_agreement_widget.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/app_core/resources/app_font_styles/app_font_styles.dart';
@@ -53,6 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final registerManager = context.use<RegisterManager>();
+    final checkBoxManager = context.use<CheckBoxManager>();
 
     return GestureDetector(
       onTap: () {
@@ -312,6 +315,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                           validationErrorMessage:
                                           'لا يمكن ان يترك هذا الحقل فارغا',
                                         ),
+                                        const  CheckBoxAgreement(),
+
                                         SizedBox(
                                           height: 50.h,
                                         ),
@@ -358,6 +363,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               title: 'تسجيل دخول',
                               onClick: () async {
                                 removeFocus(context);
+                                if(!checkBoxManager.currentCheckBox){
+                                  locator<ToastTemplate>().show("برجاء التعهد بصحة البيانات اولا");
+                                  return;
+                                }
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
                                 } else {

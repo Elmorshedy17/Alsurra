@@ -10,6 +10,7 @@ import 'package:alsurrah/features/bottom_navigation/pages/family_card/family_man
 import 'package:alsurrah/features/bottom_navigation/pages/home/home_manager.dart';
 import 'package:alsurrah/features/bottom_navigation/pages/playgrounds/playgrounds_manager.dart';
 import 'package:alsurrah/features/branches/branches_manager.dart';
+import 'package:alsurrah/features/check_box_agreement/check_box_agreement_manager.dart';
 import 'package:alsurrah/features/contact_us/contact_us_manager.dart';
 import 'package:alsurrah/features/course_details/course_details_manager.dart';
 import 'package:alsurrah/features/courses/courses_manager.dart';
@@ -182,4 +183,8 @@ Future<void> setupLocator() async {
 
   /// ProfitsManager
   locator.registerLazySingleton<ProfitsManager>(() => ProfitsManager());
+
+
+  /// CheckBoxManager
+  locator.registerLazySingleton<CheckBoxManager>(() => CheckBoxManager());
 }

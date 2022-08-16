@@ -22,7 +22,7 @@
     </queries>
 
    <application
-        android:label="السرة"
+        android:label="جمعية السرة التعاونية"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:roundIcon="@mipmap/ic_launcher_rounded">
