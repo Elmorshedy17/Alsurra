@@ -54,12 +54,12 @@ dependencies:
   flutter_html: ^2.2.1
   intl: ^0.17.0
   webview_flutter: ^2.0.4
-  url_launcher: ^6.1.2
-  google_maps_flutter: ^2.1.8
-  share_plus: ^4.0.10
-  firebase_core: ^1.13.1
-  firebase_messaging: ^11.2.11
-  flutter_local_notifications: ^9.3.3
+  url_launcher: ^6.1.5
+  google_maps_flutter: ^2.1.11
+  share_plus: ^4.0.10+1
+  firebase_core: ^1.20.1
+  firebase_messaging: ^12.0.2
+  flutter_local_notifications: ^9.8.0+1
   flutter_rounded_date_picker: ^3.0.1
 
     #  google_fonts: ^3.0.1
