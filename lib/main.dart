@@ -64,6 +64,7 @@ Future<void> main() async {
           AppLanguageManager appLanguage = locator<AppLanguageManager>();
           await appLanguage.fetchLocale();
 
+
           await SystemChrome.setPreferredOrientations(
               [DeviceOrientation.portraitUp]);
           SystemChrome.setSystemUIOverlayStyle(
