@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:alsurrah/app_core/app_core.dart';
+import 'package:alsurrah/app_core/resources/app_routes_names/app_routes_names.dart';
+import 'package:alsurrah/features/booking/booking_payment/booking_web_view.dart';
 import 'package:alsurrah/features/booking/booking_repo.dart';
 import 'package:alsurrah/features/booking/booking_request.dart';
 import 'package:alsurrah/features/booking/booking_response.dart';
@@ -10,6 +12,7 @@ class BookingManager extends Manager<BookingResponse> {
   final BookingRepo _bookingRepo = BookingRepo();
   final _prefs = locator<PrefsService>();
   String? errorDescription;
+  final navigationService = locator<NavigationService>();
 
   final PublishSubject<ManagerState> _stateSubject = PublishSubject();
 
@@ -22,7 +25,10 @@ class BookingManager extends Manager<BookingResponse> {
     await _bookingRepo.booking(request).then((result) {
       if (result.status == 1) {
         inState.add(ManagerState.success);
-
+        navigationService.pushNamedTo(
+          AppRoutesNames.bookingWebViewPage,
+          arguments: BookingWebViewArgs(paymentUrl: '${result.data?.url}'),
+        );
         managerState = ManagerState.success;
       } else if (result.status == 0) {
         inState.add(ManagerState.error);
