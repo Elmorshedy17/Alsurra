@@ -37,7 +37,7 @@ class HotelOrChaletManager extends Manager<HotelOrChaletResponse> {
   static final ValueNotifier<DateTime> _dateNotifier =
       ValueNotifier<DateTime>(tomorrow);
   ValueNotifier<DateTime> get dateNotifier => _dateNotifier;
-  static DateTime get selectedDate => _dateNotifier.value;
+  DateTime get selectedDate => _dateNotifier.value;
   set _selectedDate(DateTime newDate) => _dateNotifier.value = newDate;
 
   resetDate() {
@@ -60,8 +60,9 @@ class HotelOrChaletManager extends Manager<HotelOrChaletResponse> {
                 primaryColor: const Color(0xFF8CE7F1),
                 buttonTheme:
                     const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-                colorScheme: const ColorScheme.light(primary: AppStyle.darkOrange)
-                    .copyWith(secondary: AppStyle.darkOrange),
+                colorScheme:
+                    const ColorScheme.light(primary: AppStyle.darkOrange)
+                        .copyWith(secondary: AppStyle.darkOrange),
                 // colorScheme: const ColorScheme.light(primary: Color(0xFF8CE7F1))
                 //     .copyWith(secondary: const Color(0xFF8CE7F1)),
               ),
@@ -82,7 +83,7 @@ class HotelOrChaletManager extends Manager<HotelOrChaletResponse> {
 
   //****************************************************************************
   final ValueNotifier<ShowZoomable> _showZoomableNotifier =
-  ValueNotifier<ShowZoomable>(ShowZoomable.hide);
+      ValueNotifier<ShowZoomable>(ShowZoomable.hide);
   ValueNotifier<ShowZoomable> get showZoomableNotifier => _showZoomableNotifier;
   ShowZoomable get showZoomable => _showZoomableNotifier.value;
   set showZoomable(ShowZoomable val) => _showZoomableNotifier.value = val;

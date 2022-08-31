@@ -13,7 +13,7 @@ class BookingRepo {
     print(formData.fields);
     try {
       final Response response = await locator<ApiService>().dioClient.post(
-            '${locator<ApiService>().dioClient.options.baseUrl}forget_password',
+            '${locator<ApiService>().dioClient.options.baseUrl}book',
             data: formData,
           );
       return BookingResponse.fromJson(response.data);

@@ -4,7 +4,7 @@ class BookingRequest {
   String? date;
   String? time;
   int? count;
-  int? cardId;
+  String? cardId;
   int? optionId;
 
   BookingRequest(
