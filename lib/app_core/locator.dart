@@ -6,6 +6,7 @@ import 'package:alsurrah/features/activities/activities_manager.dart';
 import 'package:alsurrah/features/activities_details/activities_details_manager.dart';
 import 'package:alsurrah/features/app_settings/app_settings_manager.dart';
 import 'package:alsurrah/features/barcode/barcode_manager.dart';
+import 'package:alsurrah/features/booking/booking_manager.dart';
 import 'package:alsurrah/features/bottom_navigation/pages/family_card/family_manager.dart';
 import 'package:alsurrah/features/bottom_navigation/pages/home/home_manager.dart';
 import 'package:alsurrah/features/bottom_navigation/pages/playgrounds/playgrounds_manager.dart';
@@ -179,12 +180,15 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<SearchManager>(() => SearchManager());
 
   /// ForgotPasswordManager
-  locator.registerLazySingleton<ForgotPasswordManager>(() => ForgotPasswordManager());
+  locator.registerLazySingleton<ForgotPasswordManager>(
+      () => ForgotPasswordManager());
 
   /// ProfitsManager
   locator.registerLazySingleton<ProfitsManager>(() => ProfitsManager());
 
-
   /// CheckBoxManager
   locator.registerLazySingleton<CheckBoxManager>(() => CheckBoxManager());
+
+  /// BookingManager
+  locator.registerLazySingleton<BookingManager>(() => BookingManager());
 }
