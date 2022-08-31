@@ -8,6 +8,7 @@ import 'package:alsurrah/features/hotel_or_chalet/hotel_or_chalet_response.dart'
 import 'package:alsurrah/features/hotel_or_chalet/widgets/select_date.dart';
 import 'package:alsurrah/shared/check_box/check_box.dart';
 import 'package:alsurrah/shared/alsurrah_app_bar/alsurrah_app_bar.dart';
+import 'package:alsurrah/shared/counter_widget/counter_widget.dart';
 import 'package:alsurrah/shared/main_button/main_button_widget.dart';
 import 'package:alsurrah/shared/network_app_image/network_app_image.dart';
 import 'package:alsurrah/shared/remove_focus/remove_focus.dart';
@@ -310,6 +311,26 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
                                           const SizedBox(
                                             height: 35,
                                           ),
+                                                CounterWidget(
+                                    stream: courseDetailsManager.selectedCount$,
+                                    maxCount:
+                                    courseDetailsSnapshot.data?.courseDetails?.count ??
+                                        0,
+                                    onDecrement: () {
+                                      courseDetailsManager.counterSubject.sink.add(
+                                          courseDetailsManager.counterSubject.value - 1);
+                                    },
+                                    onIncrement: () {
+                                      courseDetailsManager.counterSubject.sink.add(
+                                          courseDetailsManager.counterSubject.value + 1);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 35,
+                            ),
 
                                           Center(
                                               child: MainButtonWidget(
