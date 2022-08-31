@@ -47,7 +47,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           showNotification: false,
           showBack: true,
           showSearch: true,
-          title: "الدورات",
+          title: "النوادي",
         ),
         // ),
       ),
@@ -71,22 +71,25 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                           padding: const EdgeInsets.only(
                               top: 24, bottom: 15, right: 15, left: 15),
                           itemCount: activitiesManager.activities.length,
-                          itemBuilder: (_, index) => ActivityItem(
-                            imageUrl:
-                                activitiesManager.activities[index].image!,
-                            title: activitiesManager.activities[index].name!,
-                            date: activitiesManager.activities[index].desc!,
-                            price: activitiesManager.activities[index].price!,
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                AppRoutesNames.activitiesDetailsPage,
-                                arguments: ActivitiesDetailsArgs(
-                                    activityId:
-                                        activitiesManager.activities[index].id!,
-                                    activityTitle: activitiesManager
-                                        .activities[index].name),
-                              );
-                            },
+                          itemBuilder: (_, index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: ActivityItem(
+                              imageUrl:
+                                  activitiesManager.activities[index].image!,
+                              title: activitiesManager.activities[index].name!,
+                              date: activitiesManager.activities[index].desc!,
+                              price: activitiesManager.activities[index].price!,
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  AppRoutesNames.activitiesDetailsPage,
+                                  arguments: ActivitiesDetailsArgs(
+                                      activityId:
+                                          activitiesManager.activities[index].id!,
+                                      activityTitle: activitiesManager
+                                          .activities[index].name),
+                                );
+                              },
+                            ),
                           ),
                         )
                       : Column(
