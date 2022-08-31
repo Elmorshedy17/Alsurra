@@ -324,19 +324,32 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
                                                                 builder: (context, snapshot) {
                                                                   return  Column(
                                                                     children: [
-                                                                   snapshot.data == 0 ? Text("الحجز غير متاح",style: AppFontStyle.descFont,) :  CounterWidget(
-                                                  stream: hotelOrChaletManager.selectedCount$,
-                                                  maxCount:  maxCount,
+                                                                      ValueListenableBuilder<
+                                                                          int>(
+                                                                          valueListenable:
+                                                                          hotelOrChaletManager
+                                                                              .optionNotifier,
+                                                                          builder: (context, value, _) {
+                                                                          return hotelOrChaletManager
+                                                                              .optionNotifier
+                                                                              .value == 0 ? Container() : Container(
+                                                                            child:   snapshot.data == 0 ? Text("الحجز غير متاح",style: AppFontStyle.descFont,) :  CounterWidget(
+                                                                              stream: hotelOrChaletManager.selectedCount$,
+                                                                              maxCount:  maxCount,
 
-                                                  onDecrement: () {
-                                                    hotelOrChaletManager.counterSubject.sink.add(
-                                                        hotelOrChaletManager.counterSubject.value - 1);
-                                                  },
-                                                  onIncrement: () {
-                                                    hotelOrChaletManager.counterSubject.sink.add(
-                                                        hotelOrChaletManager.counterSubject.value + 1);
-                                                  },
-                                                ),
+                                                                              onDecrement: () {
+                                                                                hotelOrChaletManager.counterSubject.sink.add(
+                                                                                    hotelOrChaletManager.counterSubject.value - 1);
+                                                                              },
+                                                                              onIncrement: () {
+                                                                                hotelOrChaletManager.counterSubject.sink.add(
+                                                                                    hotelOrChaletManager.counterSubject.value + 1);
+                                                                              },
+                                                                            ),
+                                                                          );
+                                                                        }
+                                                                      ),
+
                                                                       const SizedBox(
                                                                         height: 35,
                                                                       ),
