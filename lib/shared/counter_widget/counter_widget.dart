@@ -21,7 +21,7 @@ class CounterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int>(
-        initialData: 1,
+        initialData: 0,
         stream: stream,
         builder: (context, counterSnapshot) {
           return Row(
@@ -41,6 +41,8 @@ class CounterWidget extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     child: InkWell(
                       onTap: () {
+                        print("counterSnapshot.data! ${counterSnapshot.data!}");
+                        print("maxCount ${maxCount}");
                         if (counterSnapshot.data! < maxCount) {
                           onIncrement();
                         } else {

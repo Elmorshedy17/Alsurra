@@ -11,7 +11,7 @@ class ActivityDetailsManager extends Manager<ActivityDetailsResponse> {
 
   Stream<ActivityDetailsResponse> get activityDetails$ => _subject.stream;
 
-  final BehaviorSubject<int> counterSubject = BehaviorSubject<int>.seeded(1);
+  final BehaviorSubject<int> counterSubject = BehaviorSubject<int>.seeded(0);
 
   Stream<int> get selectedCount$ => counterSubject.stream;
 

@@ -44,6 +44,8 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
       if (args != null) {
         locator<HotelOrChaletManager>()
             .execute(hotelOrChaletId: args!.hotelOrChaletId);
+        locator<HotelOrChaletManager>().counterSubject.sink.add(0);
+
       }
       locator<HotelOrChaletManager>().resetDate();
     });
@@ -55,6 +57,7 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
     final hotelOrChaletManager = context.use<HotelOrChaletManager>();
     final bookingManager = context.use<BookingManager>();
     final prefs = context.use<PrefsService>();
+     int maxCount = 0;
 
     if (args == null) {
       args = ModalRoute.of(context)!.settings.arguments as HotelOrChaletArgs;
@@ -256,6 +259,11 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
                                                                     .options![
                                                                         index]
                                                                     .id!;
+                                                            maxCount = hotelOrChaletSnapshot.data!.hotel!.options![index]!.count!;
+                                                            hotelOrChaletManager.maxSubject.sink.add(hotelOrChaletSnapshot.data!.hotel!.options![index]!.count!);
+                                                            // hotelOrChaletManager.maxSubject.sink.add(hotelOrChaletSnapshot.data!.hotel!.options![index]!.count!);
+                                                            hotelOrChaletManager.counterSubject.sink.add(0);
+
                                                           },
                                                           child: Row(
                                                             mainAxisAlignment:
@@ -311,77 +319,85 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
                                           const SizedBox(
                                             height: 35,
                                           ),
-                                          //                     CounterWidget(
-                                          //         stream: courseDetailsManager.selectedCount$,
-                                          //         maxCount:
-                                          //         courseDetailsSnapshot.data?.courseDetails?.count ??
-                                          //             0,
-                                          //         onDecrement: () {
-                                          //           courseDetailsManager.counterSubject.sink.add(
-                                          //               courseDetailsManager.counterSubject.value - 1);
-                                          //         },
-                                          //         onIncrement: () {
-                                          //           courseDetailsManager.counterSubject.sink.add(
-                                          //               courseDetailsManager.counterSubject.value + 1);
-                                          //         },
-                                          //       ),
-                                          //     ],
-                                          //   ),
-                                          // ),
-                                          // const SizedBox(
-                                          //   height: 35,
-                                          // ),
+                                                              StreamBuilder<int>(
+                                                                stream: hotelOrChaletManager.maxSubject.stream,
+                                                                builder: (context, snapshot) {
+                                                                  return  Column(
+                                                                    children: [
+                                                                   snapshot.data == 0 ? Text("الحجز غير متاح",style: AppFontStyle.descFont,) :  CounterWidget(
+                                                  stream: hotelOrChaletManager.selectedCount$,
+                                                  maxCount:  maxCount,
 
-                                          Center(
-                                              child: MainButtonWidget(
-                                                  title: "حجز",
-                                                  onClick: () {
-                                                    if (hotelOrChaletManager
-                                                            .optionNotifier
-                                                            .value ==
-                                                        0) {
-                                                      locator<ToastTemplate>().show(
-                                                          "برجاء تحديد الاختيار اولا");
-                                                    } else {
-                                                      if (prefs.userObj !=
-                                                          null) {
-                                                        bookingManager.booking(
-                                                            request:
-                                                                BookingRequest(
-                                                          id: args!
-                                                              .hotelOrChaletId,
-                                                          cardId: hotelOrChaletSnapshot
-                                                                      .data
-                                                                      ?.hotel
-                                                                      ?.card !=
-                                                                  'no'
-                                                              ? prefs
-                                                                  .userObj?.box
-                                                              : '',
-                                                          count: 1,
-                                                          date: HotelOrChaletManager
-                                                              .getFormattedDate(
-                                                                  hotelOrChaletManager
-                                                                      .selectedDate),
-                                                          optionId:
-                                                              hotelOrChaletManager
-                                                                  .optionNotifier
-                                                                  .value,
-                                                          time: '',
-                                                          type: BookingType
-                                                              .hotel.name,
-                                                        ));
-                                                      } else {
-                                                        locator<ToastTemplate>()
-                                                            .show(
-                                                                "برجاء تسجيل الدخول اولا");
-                                                      }
-                                                    }
+                                                  onDecrement: () {
+                                                    hotelOrChaletManager.counterSubject.sink.add(
+                                                        hotelOrChaletManager.counterSubject.value - 1);
                                                   },
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      .85))
+                                                  onIncrement: () {
+                                                    hotelOrChaletManager.counterSubject.sink.add(
+                                                        hotelOrChaletManager.counterSubject.value + 1);
+                                                  },
+                                                ),
+                                                                      const SizedBox(
+                                                                        height: 35,
+                                                                      ),
+                                                                      Center(
+                                                                          child: MainButtonWidget(
+                                                                              title: "حجز",
+                                                                              onClick: snapshot.data == 0 ? null :  () {
+                                                                                if (hotelOrChaletManager
+                                                                                    .optionNotifier
+                                                                                    .value ==
+                                                                                    0) {
+                                                                                  locator<ToastTemplate>().show(
+                                                                                      "برجاء تحديد الاختيار اولا");
+                                                                                } else {
+                                                                                  if (prefs.userObj !=
+                                                                                      null) {
+                                                                                    bookingManager.booking(
+                                                                                        request:
+                                                                                        BookingRequest(
+                                                                                          id: args!
+                                                                                              .hotelOrChaletId,
+                                                                                          cardId: hotelOrChaletSnapshot
+                                                                                              .data
+                                                                                              ?.hotel
+                                                                                              ?.card !=
+                                                                                              'no'
+                                                                                              ? prefs
+                                                                                              .userObj?.box
+                                                                                              : '',
+                                                                                          count:  locator<HotelOrChaletManager>().counterSubject.value,
+                                                                                          date: HotelOrChaletManager
+                                                                                              .getFormattedDate(
+                                                                                              hotelOrChaletManager
+                                                                                                  .selectedDate),
+                                                                                          optionId:
+                                                                                          hotelOrChaletManager
+                                                                                              .optionNotifier
+                                                                                              .value,
+                                                                                          time: '',
+                                                                                          type: BookingType
+                                                                                              .hotel.name,
+                                                                                        ));
+                                                                                  } else {
+                                                                                    locator<ToastTemplate>()
+                                                                                        .show(
+                                                                                        "برجاء تسجيل الدخول اولا");
+                                                                                  }
+                                                                                }
+                                                                              },
+                                                                              width: MediaQuery.of(context)
+                                                                                  .size
+                                                                                  .width *
+                                                                                  .85))
+                                                                    ],
+                                                                  );
+                                                                }
+                                                              ),
+
+
+
+
                                         ],
                                       ),
                                     )
