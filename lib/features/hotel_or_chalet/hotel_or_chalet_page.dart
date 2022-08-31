@@ -1,6 +1,8 @@
 import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/app_core/resources/app_font_styles/app_font_styles.dart';
 import 'package:alsurrah/app_core/resources/app_style/app_style.dart';
+import 'package:alsurrah/features/booking/booking_manager.dart';
+import 'package:alsurrah/features/booking/booking_request.dart';
 import 'package:alsurrah/features/hotel_or_chalet/hotel_or_chalet_manager.dart';
 import 'package:alsurrah/features/hotel_or_chalet/hotel_or_chalet_response.dart';
 import 'package:alsurrah/features/hotel_or_chalet/widgets/select_date.dart';
@@ -44,13 +46,14 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
       }
       locator<HotelOrChaletManager>().resetDate();
     });
-    locator<HotelOrChaletManager>().showZoomable =
-        ShowZoomable.hide;
+    locator<HotelOrChaletManager>().showZoomable = ShowZoomable.hide;
   }
 
   @override
   Widget build(BuildContext context) {
     final hotelOrChaletManager = context.use<HotelOrChaletManager>();
+    final bookingManager = context.use<BookingManager>();
+    final prefs = context.use<PrefsService>();
 
     if (args == null) {
       args = ModalRoute.of(context)!.settings.arguments as HotelOrChaletArgs;
@@ -83,234 +86,322 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
                   hotelOrChaletId: args!.hotelOrChaletId);
             },
             onSuccess: (context, hotelOrChaletSnapshot) {
-              return
-
-                ValueListenableBuilder<ShowZoomable>(
-                    valueListenable:
-                    hotelOrChaletManager.showZoomableNotifier,
-                    builder: (context, value, _) {
-                      return Stack(
-                        children: [
-                          ListView(
-                            children: [
-                              InkWell(
-                                onTap: (){
-                                  selectedImage = '${hotelOrChaletSnapshot.data!.hotel!.image}';
-                                  hotelOrChaletManager.showZoomable =
-                                      ShowZoomable.show;
+              return ValueListenableBuilder<ShowZoomable>(
+                  valueListenable: hotelOrChaletManager.showZoomableNotifier,
+                  builder: (context, value, _) {
+                    return Stack(
+                      children: [
+                        StreamBuilder<ManagerState>(
+                            initialData: ManagerState.idle,
+                            stream: bookingManager.state$,
+                            builder: (context,
+                                AsyncSnapshot<ManagerState> stateSnapshot) {
+                              return FormsStateHandling(
+                                managerState: stateSnapshot.data,
+                                errorMsg: bookingManager.errorDescription,
+                                onClickCloseErrorBtn: () {
+                                  bookingManager.inState.add(ManagerState.idle);
                                 },
-                                child: NetworkAppImage(
-                                  height: 300.h,
-                                  width: double.infinity,
-                                  boxFit: BoxFit.fill,
-                                  imageUrl: '${hotelOrChaletSnapshot.data!.hotel!.image}',
-                                  // imageUrl: '${e}',
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: ListView(
                                   children: [
-                                    const SizedBox(
-                                      height: 25,
-                                    ),
-                                    Text(
-                                      '${hotelOrChaletSnapshot.data!.hotel?.name}',
-                                      style: AppFontStyle.biggerBlueLabel,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'التاريخ : ${hotelOrChaletSnapshot.data!.hotel?.date}',
-                                      style: AppFontStyle.descFont.copyWith(
-                                          fontWeight: FontWeight.normal, fontSize: 13),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '${hotelOrChaletSnapshot.data?.hotel?.price}',
-                                          style: AppFontStyle.darkGreyLabel
-                                              .copyWith(color: Colors.black),
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          'بدلا من',
-                                          style: AppFontStyle.darkGreyLabel
-                                              .copyWith(color: Colors.black),
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          '${hotelOrChaletSnapshot.data?.hotel?.oldPrice}',
-                                          style: AppFontStyle.darkGreyLabel.copyWith(
-                                            color: Colors.black.withOpacity(.6),
-                                            decoration: TextDecoration.lineThrough,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Text(
-                                    //   '${hotelOrChaletSnapshot.data!.hotel?.price}',
-                                    //   style: AppFontStyle.darkGreyLabel,
-                                    // ),
-                                    const Divider(
-                                      height: 30,
-                                    ),
-                                    Html(
-                                      data: '${hotelOrChaletSnapshot.data!.hotel?.desc}',
-                                    ),
-                                    const SizedBox(
-                                      height: 25,
-                                    ),
-                                    if (hotelOrChaletSnapshot
-                                        .data!.hotel!.options!.isNotEmpty)
-                                      Container(
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
-                                          border: Border.all(
-                                            color: AppStyle.darkGrey.withOpacity(.3),
-                                          ),
-                                        ),
-                                        child: ValueListenableBuilder<int>(
-                                            valueListenable:
-                                            hotelOrChaletManager.optionNotifier,
-                                            builder: (context, value, _) {
-                                              return ListView.separated(
-                                                shrinkWrap: true,
-                                                physics:
-                                                const NeverScrollableScrollPhysics(),
-                                                itemCount: hotelOrChaletSnapshot
-                                                    .data!.hotel!.options!.length,
-                                                separatorBuilder: (context, index) {
-                                                  return Divider(
-                                                    height: 25,
-                                                    color:
-                                                    AppStyle.darkGrey.withOpacity(.6),
-                                                  );
-                                                },
-                                                itemBuilder: (context, index) {
-                                                  Options option = hotelOrChaletSnapshot
-                                                      .data!.hotel!.options![index];
-
-                                                  return InkWell(
-                                                    onTap: () {
-                                                      hotelOrChaletManager
-                                                          .optionNotifier.value =
-                                                      hotelOrChaletSnapshot.data!.hotel!
-                                                          .options![index].id!;
-                                                    },
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                      children: [
-                                                        CustomCheckBox(
-                                                            isChecked: option.id ==
-                                                                hotelOrChaletManager
-                                                                    .optionNotifier.value),
-                                                        const SizedBox(
-                                                          width: 15,
-                                                        ),
-                                                        Column(
-                                                          mainAxisAlignment:
-                                                          MainAxisAlignment.start,
-                                                          crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                          children: [
-                                                            Text(
-                                                              "${option.name}",
-                                                              style: AppFontStyle.blueLabel,
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 12,
-                                                            ),
-                                                            Text(
-                                                              "${option.price}",
-                                                              style: AppFontStyle
-                                                                  .darkGreyLabel,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }),
+                                    InkWell(
+                                      onTap: () {
+                                        selectedImage =
+                                            '${hotelOrChaletSnapshot.data!.hotel!.image}';
+                                        hotelOrChaletManager.showZoomable =
+                                            ShowZoomable.show;
+                                      },
+                                      child: NetworkAppImage(
+                                        height: 300.h,
+                                        width: double.infinity,
+                                        boxFit: BoxFit.fill,
+                                        imageUrl:
+                                            '${hotelOrChaletSnapshot.data!.hotel!.image}',
+                                        // imageUrl: '${e}',
                                       ),
-                                    const SizedBox(
-                                      height: 15,
                                     ),
-                                    DateTimeWidget(),
-                                    const SizedBox(
-                                      height: 35,
-                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 25,
+                                          ),
+                                          Text(
+                                            '${hotelOrChaletSnapshot.data!.hotel?.name}',
+                                            style: AppFontStyle.biggerBlueLabel,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'التاريخ : ${hotelOrChaletSnapshot.data!.hotel?.date}',
+                                            style: AppFontStyle.descFont
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    fontSize: 13),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '${hotelOrChaletSnapshot.data?.hotel?.price}',
+                                                style: AppFontStyle
+                                                    .darkGreyLabel
+                                                    .copyWith(
+                                                        color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                'بدلا من',
+                                                style: AppFontStyle
+                                                    .darkGreyLabel
+                                                    .copyWith(
+                                                        color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '${hotelOrChaletSnapshot.data?.hotel?.oldPrice}',
+                                                style: AppFontStyle
+                                                    .darkGreyLabel
+                                                    .copyWith(
+                                                  color: Colors.black
+                                                      .withOpacity(.6),
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          // Text(
+                                          //   '${hotelOrChaletSnapshot.data!.hotel?.price}',
+                                          //   style: AppFontStyle.darkGreyLabel,
+                                          // ),
+                                          const Divider(
+                                            height: 30,
+                                          ),
+                                          Html(
+                                            data:
+                                                '${hotelOrChaletSnapshot.data!.hotel?.desc}',
+                                          ),
+                                          const SizedBox(
+                                            height: 25,
+                                          ),
+                                          if (hotelOrChaletSnapshot
+                                              .data!.hotel!.options!.isNotEmpty)
+                                            Container(
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                border: Border.all(
+                                                  color: AppStyle.darkGrey
+                                                      .withOpacity(.3),
+                                                ),
+                                              ),
+                                              child: ValueListenableBuilder<
+                                                      int>(
+                                                  valueListenable:
+                                                      hotelOrChaletManager
+                                                          .optionNotifier,
+                                                  builder: (context, value, _) {
+                                                    return ListView.separated(
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          const NeverScrollableScrollPhysics(),
+                                                      itemCount:
+                                                          hotelOrChaletSnapshot
+                                                              .data!
+                                                              .hotel!
+                                                              .options!
+                                                              .length,
+                                                      separatorBuilder:
+                                                          (context, index) {
+                                                        return Divider(
+                                                          height: 25,
+                                                          color: AppStyle
+                                                              .darkGrey
+                                                              .withOpacity(.6),
+                                                        );
+                                                      },
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        Options option =
+                                                            hotelOrChaletSnapshot
+                                                                    .data!
+                                                                    .hotel!
+                                                                    .options![
+                                                                index];
 
-                                    Center(
-                                        child: MainButtonWidget(
-                                            title: "حجز",
-                                            onClick: (){
-                                              if(hotelOrChaletManager.optionNotifier.value == 0 ){
-                                                locator<ToastTemplate>().show("برجاء تحديد الاختيار اولا");
-                                              }else{
+                                                        return InkWell(
+                                                          onTap: () {
+                                                            hotelOrChaletManager
+                                                                    .optionNotifier
+                                                                    .value =
+                                                                hotelOrChaletSnapshot
+                                                                    .data!
+                                                                    .hotel!
+                                                                    .options![
+                                                                        index]
+                                                                    .id!;
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              CustomCheckBox(
+                                                                  isChecked: option
+                                                                          .id ==
+                                                                      hotelOrChaletManager
+                                                                          .optionNotifier
+                                                                          .value),
+                                                              const SizedBox(
+                                                                width: 15,
+                                                              ),
+                                                              Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    "${option.name}",
+                                                                    style: AppFontStyle
+                                                                        .blueLabel,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 12,
+                                                                  ),
+                                                                  Text(
+                                                                    "${option.price}",
+                                                                    style: AppFontStyle
+                                                                        .darkGreyLabel,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }),
+                                            ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          DateTimeWidget(),
+                                          const SizedBox(
+                                            height: 35,
+                                          ),
 
-                                              }
-                                            },
-                                            width: MediaQuery.of(context).size.width * .85))
-
+                                          Center(
+                                              child: MainButtonWidget(
+                                                  title: "حجز",
+                                                  onClick: () {
+                                                    if (hotelOrChaletManager
+                                                            .optionNotifier
+                                                            .value ==
+                                                        0) {
+                                                      locator<ToastTemplate>().show(
+                                                          "برجاء تحديد الاختيار اولا");
+                                                    } else {
+                                                      if (prefs.userObj !=
+                                                          null) {
+                                                        bookingManager.booking(
+                                                            request:
+                                                                BookingRequest(
+                                                          id: args!
+                                                              .hotelOrChaletId,
+                                                          cardId: hotelOrChaletSnapshot
+                                                                      .data
+                                                                      ?.hotel
+                                                                      ?.card !=
+                                                                  'no'
+                                                              ? prefs
+                                                                  .userObj?.box
+                                                              : '',
+                                                          count: 1,
+                                                          date: HotelOrChaletManager
+                                                              .getFormattedDate(
+                                                                  hotelOrChaletManager
+                                                                      .selectedDate),
+                                                          optionId:
+                                                              hotelOrChaletManager
+                                                                  .optionNotifier
+                                                                  .value,
+                                                          time: '',
+                                                          type: BookingType
+                                                              .hotel.name,
+                                                        ));
+                                                      } else {
+                                                        locator<ToastTemplate>()
+                                                            .show(
+                                                                "برجاء تسجيل الدخول اولا");
+                                                      }
+                                                    }
+                                                  },
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .85))
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                          if (value == ShowZoomable.show)
-                            Positioned.fill(
-                              child: Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: PhotoView(
-                                      backgroundDecoration:
-                                      const BoxDecoration(
-                                          color: Colors.black38),
-                                      minScale: PhotoViewComputedScale.contained * 0.3,
-                                      initialScale: PhotoViewComputedScale.contained * 0.8,
-                                      imageProvider: NetworkImage(
-                                          selectedImage,
-                                          scale: 1
-                                      ),
-                                    ),
+                              );
+                            }),
+                        if (value == ShowZoomable.show)
+                          Positioned.fill(
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: PhotoView(
+                                    backgroundDecoration: const BoxDecoration(
+                                        color: Colors.black38),
+                                    minScale:
+                                        PhotoViewComputedScale.contained * 0.3,
+                                    initialScale:
+                                        PhotoViewComputedScale.contained * 0.8,
+                                    imageProvider:
+                                        NetworkImage(selectedImage, scale: 1),
                                   ),
-                                  Positioned(
-                                    bottom: 30,
-                                    left: 30,
-                                    child: FloatingActionButton(
-                                      // mini: true,
-                                      onPressed: () {
-                                        hotelOrChaletManager.showZoomable =
-                                            ShowZoomable.hide;
-                                      },
-                                      child: const Icon(Icons.close),
-                                    ),
+                                ),
+                                Positioned(
+                                  bottom: 30,
+                                  left: 30,
+                                  child: FloatingActionButton(
+                                    // mini: true,
+                                    onPressed: () {
+                                      hotelOrChaletManager.showZoomable =
+                                          ShowZoomable.hide;
+                                    },
+                                    child: const Icon(Icons.close),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                        ],
-                      );
-                    });
-              
-                
+                          ),
+                      ],
+                    );
+                  });
             }),
       ),
     );
