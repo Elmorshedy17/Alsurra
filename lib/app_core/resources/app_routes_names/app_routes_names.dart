@@ -38,5 +38,5 @@ abstract class AppRoutesNames {
   static const String fixPage = '/fixPage';
   static const String profitsPage = '/profitsPage';
   static const String profitsResultsPage = '/profitsResultsPage';
+  static const String bookingWebViewPage = '/bookingWebViewPage';
 }
-
