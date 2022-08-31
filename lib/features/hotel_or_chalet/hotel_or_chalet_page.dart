@@ -311,26 +311,26 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
                                           const SizedBox(
                                             height: 35,
                                           ),
-                                                CounterWidget(
-                                    stream: courseDetailsManager.selectedCount$,
-                                    maxCount:
-                                    courseDetailsSnapshot.data?.courseDetails?.count ??
-                                        0,
-                                    onDecrement: () {
-                                      courseDetailsManager.counterSubject.sink.add(
-                                          courseDetailsManager.counterSubject.value - 1);
-                                    },
-                                    onIncrement: () {
-                                      courseDetailsManager.counterSubject.sink.add(
-                                          courseDetailsManager.counterSubject.value + 1);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 35,
-                            ),
+                                          //                     CounterWidget(
+                                          //         stream: courseDetailsManager.selectedCount$,
+                                          //         maxCount:
+                                          //         courseDetailsSnapshot.data?.courseDetails?.count ??
+                                          //             0,
+                                          //         onDecrement: () {
+                                          //           courseDetailsManager.counterSubject.sink.add(
+                                          //               courseDetailsManager.counterSubject.value - 1);
+                                          //         },
+                                          //         onIncrement: () {
+                                          //           courseDetailsManager.counterSubject.sink.add(
+                                          //               courseDetailsManager.counterSubject.value + 1);
+                                          //         },
+                                          //       ),
+                                          //     ],
+                                          //   ),
+                                          // ),
+                                          // const SizedBox(
+                                          //   height: 35,
+                                          // ),
 
                                           Center(
                                               child: MainButtonWidget(
