@@ -6,7 +6,9 @@ import 'package:alsurrah/app_core/resources/app_routes_names/app_routes_names.da
 import 'package:alsurrah/app_core/resources/app_style/app_style.dart';
 import 'package:alsurrah/features/booking/booking_manager.dart';
 import 'package:alsurrah/features/booking/booking_payment/payment_gatway_response.dart';
+import 'package:alsurrah/shared/alsurrah_app_bar/alsurrah_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -51,16 +53,27 @@ class _BookingWebViewPageState extends State<BookingWebViewPage> {
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 1,
-          backgroundColor: Colors.grey[100],
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        // appBar: AppBar(
+        //   elevation: 1,
+        //   backgroundColor: Colors.grey[100],
+        //   leading: IconButton(
+        //     icon: const Icon(Icons.arrow_back_ios),
+        //     onPressed: () {
+        //       Navigator.of(context).pop();
+        //     },
+        //   ),
+        //   centerTitle: true,
+        // ),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60.h),
+          // child: SafeArea(
+          child: AlsurrahAppBar(
+            showNotification: false,
+            showBack: true,
+            // showSearch: true,
+            title: "الدفع",
           ),
-          centerTitle: true,
+          // ),
         ),
         body:
             // SingleChildScrollView(
@@ -125,7 +138,6 @@ class _BookingWebViewPageState extends State<BookingWebViewPage> {
                                 //     AppRoutesNames.mainTabsWidget,
                                 //     (Route<dynamic> route) => false);
                                 Navigator.of(context).pop();
-
                                 locator<ToastTemplate>()
                                     .show("${result.message}");
                               } else {
