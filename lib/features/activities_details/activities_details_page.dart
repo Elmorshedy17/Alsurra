@@ -2,6 +2,8 @@ import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/app_core/resources/app_font_styles/app_font_styles.dart';
 import 'package:alsurrah/features/activities_details/activities_details_manager.dart';
 import 'package:alsurrah/features/activities_details/activities_details_response.dart';
+import 'package:alsurrah/features/booking/booking_manager.dart';
+import 'package:alsurrah/features/booking/booking_request.dart';
 import 'package:alsurrah/shared/counter_widget/counter_widget.dart';
 import 'package:alsurrah/shared/alsurrah_app_bar/alsurrah_app_bar.dart';
 import 'package:alsurrah/shared/main_button/main_button_widget.dart';
@@ -35,7 +37,7 @@ class _ActivitiesDetailsPageState extends State<ActivitiesDetailsPage> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       args =
-      ModalRoute.of(context)!.settings.arguments as ActivitiesDetailsArgs;
+          ModalRoute.of(context)!.settings.arguments as ActivitiesDetailsArgs;
       if (args != null) {
         locator<ActivityDetailsManager>().execute(activityId: args!.activityId);
         locator<ActivityDetailsManager>().counterSubject.sink.add(1);
@@ -43,17 +45,18 @@ class _ActivitiesDetailsPageState extends State<ActivitiesDetailsPage> {
       // context.use<NewsDetailsManager>().execute(newsId: args!.newsId);
     });
 
-    locator<ActivityDetailsManager>().showZoomable =
-        ShowZoomable.hide;
+    locator<ActivityDetailsManager>().showZoomable = ShowZoomable.hide;
   }
 
   @override
   Widget build(BuildContext context) {
     final activityDetailsManager = context.use<ActivityDetailsManager>();
+    final bookingManager = context.use<BookingManager>();
+    final prefs = context.use<PrefsService>();
 
     if (args == null) {
       args =
-      ModalRoute.of(context)!.settings.arguments as ActivitiesDetailsArgs;
+          ModalRoute.of(context)!.settings.arguments as ActivitiesDetailsArgs;
       activityDetailsManager.execute(activityId: args!.activityId);
     }
 
@@ -77,164 +80,207 @@ class _ActivitiesDetailsPageState extends State<ActivitiesDetailsPage> {
             activityDetailsManager.execute(activityId: args!.activityId);
           },
           onSuccess: (context, activityDetailsSnapshot) {
-            return
-
-              ValueListenableBuilder<ShowZoomable>(
-                  valueListenable:
-                  activityDetailsManager.showZoomableNotifier,
-                  builder: (context, value, _) {
-                    return Stack(
-                      children: [
-                        ListView(
-                          children: [
-                            InkWell(
-                              onTap: (){
-                                selectedImage = '${activityDetailsSnapshot.data?.activityDetails?.image}';
-                                activityDetailsManager.showZoomable =
-                                    ShowZoomable.show;
+            return ValueListenableBuilder<ShowZoomable>(
+                valueListenable: activityDetailsManager.showZoomableNotifier,
+                builder: (context, value, _) {
+                  return Stack(
+                    children: [
+                      StreamBuilder<ManagerState>(
+                          initialData: ManagerState.idle,
+                          stream: bookingManager.state$,
+                          builder: (context,
+                              AsyncSnapshot<ManagerState> stateSnapshot) {
+                            return FormsStateHandling(
+                              managerState: stateSnapshot.data,
+                              errorMsg: bookingManager.errorDescription,
+                              onClickCloseErrorBtn: () {
+                                bookingManager.inState.add(ManagerState.idle);
                               },
-                              child: NetworkAppImage(
-                                height: 300.h,
-                                width: double.infinity,
-                                boxFit: BoxFit.fill,
-                                imageUrl:
-                                '${activityDetailsSnapshot.data?.activityDetails?.image}',
-                                // imageUrl: '${e}',
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: ListView(
                                 children: [
-                                  const SizedBox(
-                                    height: 25,
+                                  InkWell(
+                                    onTap: () {
+                                      selectedImage =
+                                          '${activityDetailsSnapshot.data?.activityDetails?.image}';
+                                      activityDetailsManager.showZoomable =
+                                          ShowZoomable.show;
+                                    },
+                                    child: NetworkAppImage(
+                                      height: 300.h,
+                                      width: double.infinity,
+                                      boxFit: BoxFit.fill,
+                                      imageUrl:
+                                          '${activityDetailsSnapshot.data?.activityDetails?.image}',
+                                      // imageUrl: '${e}',
+                                    ),
                                   ),
-                                  Text(
-                                    '${activityDetailsSnapshot.data?.activityDetails?.name}',
-                                    style: AppFontStyle.biggerBlueLabel,
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'التاريخ:${activityDetailsSnapshot.data?.activityDetails?.date}',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Colors.grey,
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 25,
+                                        ),
+                                        Text(
+                                          '${activityDetailsSnapshot.data?.activityDetails?.name}',
+                                          style: AppFontStyle.biggerBlueLabel,
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          'التاريخ:${activityDetailsSnapshot.data?.activityDetails?.date}',
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '${activityDetailsSnapshot.data?.activityDetails?.price}',
+                                              style: AppFontStyle.darkGreyLabel
+                                                  .copyWith(
+                                                      color: Colors.black),
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              'بدلا من',
+                                              style: AppFontStyle.darkGreyLabel
+                                                  .copyWith(
+                                                      color: Colors.black),
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              '${activityDetailsSnapshot.data?.activityDetails?.oldPrice}',
+                                              style: AppFontStyle.darkGreyLabel
+                                                  .copyWith(
+                                                color: Colors.black
+                                                    .withOpacity(.6),
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 15),
+                                          height: 1,
+                                          width: double.infinity,
+                                          color: Colors.grey[300],
+                                        ),
+                                        Html(
+                                          data:
+                                              '${activityDetailsSnapshot.data?.activityDetails?.desc}',
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        CounterWidget(
+                                          stream: activityDetailsManager
+                                              .selectedCount$,
+                                          maxCount: activityDetailsSnapshot.data
+                                                  ?.activityDetails?.count ??
+                                              0,
+                                          onDecrement: () {
+                                            activityDetailsManager
+                                                .counterSubject.sink
+                                                .add(activityDetailsManager
+                                                        .counterSubject.value -
+                                                    1);
+                                          },
+                                          onIncrement: () {
+                                            activityDetailsManager
+                                                .counterSubject.sink
+                                                .add(activityDetailsManager
+                                                        .counterSubject.value +
+                                                    1);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   const SizedBox(
-                                    height: 5,
+                                    height: 35,
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '${activityDetailsSnapshot.data?.activityDetails?.price}',
-                                        style: AppFontStyle.darkGreyLabel
-                                            .copyWith(color: Colors.black),
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        'بدلا من',
-                                        style: AppFontStyle.darkGreyLabel
-                                            .copyWith(color: Colors.black),
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        '${activityDetailsSnapshot.data?.activityDetails?.oldPrice}',
-                                        style: AppFontStyle.darkGreyLabel.copyWith(
-                                          color: Colors.black.withOpacity(.6),
-                                          decoration: TextDecoration.lineThrough,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(vertical: 15),
-                                    height: 1,
-                                    width: double.infinity,
-                                    color: Colors.grey[300],
-                                  ),
-                                  Html(
-                                    data:
-                                    '${activityDetailsSnapshot.data?.activityDetails?.desc}',
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  CounterWidget(
-                                    stream: activityDetailsManager.selectedCount$,
-                                    maxCount: activityDetailsSnapshot
-                                        .data?.activityDetails?.count ??
-                                        0,
-                                    onDecrement: () {
-                                      activityDetailsManager.counterSubject.sink.add(
-                                          activityDetailsManager.counterSubject.value - 1);
-                                    },
-                                    onIncrement: () {
-                                      activityDetailsManager.counterSubject.sink.add(
-                                          activityDetailsManager.counterSubject.value + 1);
-                                    },
-                                  ),
+                                  Center(
+                                      child: MainButtonWidget(
+                                          title: "حجز",
+                                          onClick: () {
+                                            if (prefs.userObj != null) {
+                                              bookingManager.booking(
+                                                  request: BookingRequest(
+                                                id: args!.activityId,
+                                                cardId: activityDetailsSnapshot
+                                                            .data
+                                                            ?.activityDetails
+                                                            ?.card !=
+                                                        'no'
+                                                    ? prefs.userObj?.box
+                                                    : '',
+                                                count: activityDetailsManager
+                                                    .selectedCountValue,
+                                                type: BookingType.activity.name,
+                                              ));
+                                            } else {
+                                              locator<ToastTemplate>().show(
+                                                  "برجاء تسجيل الدخول اولا");
+                                            }
+                                          },
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .85)),
                                 ],
                               ),
-                            ),
-                            const SizedBox(
-                              height: 35,
-                            ),
-                            Center(
-                                child: MainButtonWidget(
-                                    title: "حجز",
-                                    onClick: () {
-
-                                    },
-                                    width: MediaQuery.of(context).size.width * .85)
-                            ),
-                          ],
-                        ),
-                        if (value == ShowZoomable.show)
-                          Positioned.fill(
-                            child: Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: PhotoView(
-                                    backgroundDecoration:
-                                    const BoxDecoration(
-                                        color: Colors.black38),
-                                    minScale: PhotoViewComputedScale.contained * 0.3,
-                                    initialScale: PhotoViewComputedScale.contained * 0.8,
-                                    imageProvider: NetworkImage(
-                                        selectedImage,
-                                        scale: 1
-                                    ),
-                                  ),
+                            );
+                          }),
+                      if (value == ShowZoomable.show)
+                        Positioned.fill(
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: PhotoView(
+                                  backgroundDecoration: const BoxDecoration(
+                                      color: Colors.black38),
+                                  minScale:
+                                      PhotoViewComputedScale.contained * 0.3,
+                                  initialScale:
+                                      PhotoViewComputedScale.contained * 0.8,
+                                  imageProvider:
+                                      NetworkImage(selectedImage, scale: 1),
                                 ),
-                                Positioned(
-                                  bottom: 30,
-                                  left: 30,
-                                  child: FloatingActionButton(
-                                    // mini: true,
-                                    onPressed: () {
-                                      activityDetailsManager.showZoomable =
-                                          ShowZoomable.hide;
-                                    },
-                                    child: const Icon(Icons.close),
-                                  ),
+                              ),
+                              Positioned(
+                                bottom: 30,
+                                left: 30,
+                                child: FloatingActionButton(
+                                  // mini: true,
+                                  onPressed: () {
+                                    activityDetailsManager.showZoomable =
+                                        ShowZoomable.hide;
+                                  },
+                                  child: const Icon(Icons.close),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                      ],
-                    );
-                  });
-              
-             
+                        ),
+                    ],
+                  );
+                });
           }),
     );
   }

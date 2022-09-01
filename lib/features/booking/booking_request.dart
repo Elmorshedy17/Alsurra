@@ -20,11 +20,11 @@ class BookingRequest {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['type'] = type;
-    data['date'] = date;
-    data['time'] = time;
-    data['count'] = count;
-    data['card_id'] = cardId;
-    data['option_id'] = optionId;
+    data['date'] = date ?? '';
+    data['time'] = time ?? '';
+    data['count'] = count ?? '';
+    data['card_id'] = cardId ?? '';
+    data['option_id'] = optionId ?? '';
     return data;
   }
 }

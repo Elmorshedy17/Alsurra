@@ -239,12 +239,12 @@ class _OfferOrDiscountPageState extends State<OfferOrDiscountPage> {
                                             //     ),
                                             //   ),
                                             // ),
-                                          offerOrDiscountSnapshot.data!.discount!.count == 0 ? Container() :  Column(
+                                            Column(
                                             children: [
                                               const SizedBox(
                                                 height: 35,
                                               ),
-                                              CounterWidget(
+                                              offerOrDiscountSnapshot.data!.discount!.count == 0 ?  Center(child: Text("الحجز غير متاح",style: AppFontStyle.descFont,)) :    CounterWidget(
                                                 stream: offerOrDiscountManager.selectedCount$,
                                                 maxCount:  offerOrDiscountSnapshot.data!.discount!.count!,
 
@@ -265,7 +265,7 @@ class _OfferOrDiscountPageState extends State<OfferOrDiscountPage> {
 
                                           Center(
                                               child: MainButtonWidget(
-                                                  title: offerOrDiscountSnapshot.data!.discount!.count == 0 ? "الحجز غير متاح" : "حجز",
+                                                  title: "حجز",
                                                   onClick: offerOrDiscountSnapshot.data!.discount!.count == 0 ? null : () {
                                                     // if (offerOrDiscountSnapshot
                                                     //     .data!.discount?.card ==
@@ -285,7 +285,7 @@ class _OfferOrDiscountPageState extends State<OfferOrDiscountPage> {
                                                             // date: HotelOrChaletManager.getFormattedDate(hotelOrChaletManager.selectedDate),
                                                             // optionId: offerOrDiscountManager.optionNotifier.value,
                                                             time: '',
-                                                            type: BookingType.hotel.name,
+                                                            type: BookingType.discount.name,
                                                           ));
                                                     } else {
                                                       locator<ToastTemplate>()

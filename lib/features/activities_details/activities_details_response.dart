@@ -44,16 +44,19 @@ class ActivityDetails {
   String? price;
   String? oldPrice;
   String? image;
+  String? card;
 
-  ActivityDetails(
-      {this.id,
-        this.name,
-        this.date,
-        this.desc,
-        this.count,
-        this.price,
-        this.oldPrice,
-        this.image});
+  ActivityDetails({
+    this.id,
+    this.name,
+    this.date,
+    this.desc,
+    this.count,
+    this.price,
+    this.oldPrice,
+    this.image,
+    this.card,
+  });
 
   ActivityDetails.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -64,5 +67,6 @@ class ActivityDetails {
     price = json['price'];
     oldPrice = json['old_price'];
     image = json['image'];
+    card = json['card'];
   }
 }

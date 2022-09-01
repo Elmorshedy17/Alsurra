@@ -10,7 +10,15 @@ import 'package:rxdart/rxdart.dart';
 class PlaygroundDetailsManager extends Manager<PlaygroundDetailsResponse> {
 
 
+  final BehaviorSubject<int> counterSubject = BehaviorSubject<int>.seeded(0);
 
+  final BehaviorSubject<int> maxSubject = BehaviorSubject<int>.seeded(0);
+
+  Stream<int> get selectedCount$ => counterSubject.stream;
+
+  set inSelectedCount(int selected) => counterSubject.sink.add(selected);
+
+  get selectedCountValue => counterSubject.value;
 
 
   final BehaviorSubject<PlaygroundDetailsResponse> _subject =
