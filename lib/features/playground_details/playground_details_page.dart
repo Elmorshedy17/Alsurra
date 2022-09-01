@@ -1,6 +1,8 @@
 import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/app_core/resources/app_font_styles/app_font_styles.dart';
 import 'package:alsurrah/app_core/resources/app_style/app_style.dart';
+import 'package:alsurrah/features/booking/booking_manager.dart';
+import 'package:alsurrah/features/booking/booking_request.dart';
 import 'package:alsurrah/features/playground_details/playground_details_manager.dart';
 import 'package:alsurrah/features/playground_details/playground_details_response.dart';
 import 'package:alsurrah/shared/alsurrah_app_bar/alsurrah_app_bar.dart';
@@ -56,6 +58,8 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final playgroundDetailsManager = context.use<PlaygroundDetailsManager>();
+    final bookingManager = context.use<BookingManager>();
+    final prefs = context.use<PrefsService>();
 
     if (args == null) {
       args =
@@ -92,191 +96,224 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                   builder: (context, value, _) {
                     return Stack(
                       children: [
-                        ListView(
-                          children: [
-                            InkWell(
-                              onTap: (){
-                                selectedImage = '${playgroundDetailsSnapshot.data!.playground!.image}';
-                                playgroundDetailsManager.showZoomable =
-                                    ShowZoomable.show;
-                              },
-                              child: NetworkAppImage(
-                                height: 300.h,
-                                width: double.infinity,
-                                boxFit: BoxFit.fill,
-                                imageUrl:
-                                '${playgroundDetailsSnapshot.data!.playground!.image}',
-                                // imageUrl: '${e}',
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        StreamBuilder<ManagerState>(
+                            initialData: ManagerState.idle,
+                            stream: bookingManager.state$,
+                            builder: (context,
+                                AsyncSnapshot<ManagerState> stateSnapshot) {
+                              return FormsStateHandling(
+                                managerState: stateSnapshot.data,
+                                errorMsg: bookingManager.errorDescription,
+                                onClickCloseErrorBtn: () {
+                                  bookingManager.inState.add(ManagerState.idle);
+                                },
+                              child: ListView(
                                 children: [
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  Text(
-                                    '${playgroundDetailsSnapshot.data!.playground?.name}',
-                                    style: AppFontStyle.biggerBlueLabel,
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Text(
-                                    'سعر الساعة: ${playgroundDetailsSnapshot.data!.playground?.price}',
-                                    style: AppFontStyle.biggerBlueLabel.copyWith(
-                                      color: Colors.black,
+                                  InkWell(
+                                    onTap: (){
+                                      selectedImage = '${playgroundDetailsSnapshot.data!.playground!.image}';
+                                      playgroundDetailsManager.showZoomable =
+                                          ShowZoomable.show;
+                                    },
+                                    child: NetworkAppImage(
+                                      height: 300.h,
+                                      width: double.infinity,
+                                      boxFit: BoxFit.fill,
+                                      imageUrl:
+                                      '${playgroundDetailsSnapshot.data!.playground!.image}',
+                                      // imageUrl: '${e}',
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Html(
-                                    data:
-                                    '${playgroundDetailsSnapshot.data!.playground?.desc}',
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-
-                                const  Text("التاريخ"),
-
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  StreamBuilder<String>(
-                                    initialData: "",
-                                    stream: playgroundDetailsManager.reservationDate.stream,
-                                    builder: (context, reservationDateSnapshot) {
-                                      return InkWell(
-                                        onTap: () async {
-                                          print("XXXXXXX=> playgroundDetailsManager.emptyDays? ${playgroundDetailsManager.emptyDays}");
-                                          DateTime? newDateTime = await showRoundedDatePicker(
-                                            onTapDay: (DateTime dateTime, bool available) {
-                                              if (!available) {
-                                                if(!playgroundDetailsManager.emptyDays.contains(dateTime.weekday)){
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (c) => CupertinoAlertDialog(title: const Text("الوقت المحدد غير متاح"),actions: <Widget>[
-                                                        CupertinoDialogAction(child:const Text("حسنا"),onPressed: (){
-                                                          Navigator.pop(context);
-                                                        },)
-                                                      ],));
-                                                }
-
-                                              }
-
-                                              if(playgroundDetailsManager.emptyDays.contains(dateTime.weekday)){
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (c) => CupertinoAlertDialog(title: const Text("الوقت المحدد غير متاح"),actions: <Widget>[
-                                                      CupertinoDialogAction(child: const Text("حسنا"),onPressed: (){
-                                                        Navigator.pop(context);
-                                                      },)
-                                                    ],));
-                                                return !available;
-                                              }
-                                              playgroundDetailsManager.addDateAndFormat(dateTime: dateTime);
-                                              return available;
-                                            }, context: context,
-                                            // selectableDayPredicate: playgroundDetailsManager.emptyDays ,
-                                            theme: ThemeData(primarySwatch: Colors.deepOrange),
-                                            firstDate: DateTime.now(),
-                                            lastDate: DateTime.now().add(const Duration(days: 60)),);
-
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(7),
-                                            border: Border.all(color: AppStyle.darkOrange),
-                                          ),
-                                          child: Container(
-                                            padding:const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text( reservationDateSnapshot.data != ""? "${reservationDateSnapshot.data}" :"اختر التاريخ",style: TextStyle(color: AppStyle.darkOrange),),
-                                              const Icon(Icons.calendar_today_outlined,color: AppStyle.orange,size: 17,)
-                                              ],
-
-                                            ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 25,
+                                        ),
+                                        Text(
+                                          '${playgroundDetailsSnapshot.data!.playground?.name}',
+                                          style: AppFontStyle.biggerBlueLabel,
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          'سعر الساعة: ${playgroundDetailsSnapshot.data!.playground?.price}',
+                                          style: AppFontStyle.biggerBlueLabel.copyWith(
+                                            color: Colors.black,
                                           ),
                                         ),
-                                      );
-                                    }
-                                  ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Html(
+                                          data:
+                                          '${playgroundDetailsSnapshot.data!.playground?.desc}',
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
 
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  const  Text("الوقت"),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 15),
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: AppStyle.darkOrange),
-                                    ),
-                                    child: StreamBuilder<String>(
-                                        initialData: "",
-                                        stream: playgroundDetailsManager.reservationTime.stream,
-                                        builder: (context, reservationTimeSnapshot) {
-                                        return CustomAnimatedOpenTile(
-                                          headerTxt:
-                                          reservationTimeSnapshot.data != "" ? reservationTimeSnapshot.data : "اختر الوقت",
-                                          body: StreamBuilder<List<String>>(
-                                            initialData: [],
-                                            stream: playgroundDetailsManager.availableHoursSubject.stream,
-                                            builder: (context, availableHoursSnapshot) {
-                                              return ListView.separated(
-                                                separatorBuilder: (context, index) {
-                                                  return Divider();
-                                                },
-                                                shrinkWrap: true,
-                                                physics: const NeverScrollableScrollPhysics(),
-                                                itemCount:
-                                                availableHoursSnapshot.data!.length,
-                                                itemBuilder: (_, index) => Padding(
-                                                  padding: const EdgeInsets.only(bottom: 7),
-                                                  child: InkWell(
-                                                    onTap: (){
-                                                      playgroundDetailsManager.reservationTime.sink.add(availableHoursSnapshot.data![index]);
-                                                    },
-                                                    child: Text(availableHoursSnapshot.data![index],),
+                                      const  Text("التاريخ"),
+
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        StreamBuilder<String>(
+                                          initialData: "",
+                                          stream: playgroundDetailsManager.reservationDate.stream,
+                                          builder: (context, reservationDateSnapshot) {
+                                            return InkWell(
+                                              onTap: () async {
+                                                print("XXXXXXX=> playgroundDetailsManager.emptyDays? ${playgroundDetailsManager.emptyDays}");
+                                                DateTime? newDateTime = await showRoundedDatePicker(
+                                                  onTapDay: (DateTime dateTime, bool available) {
+                                                    if (!available) {
+                                                      if(!playgroundDetailsManager.emptyDays.contains(dateTime.weekday)){
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (c) => CupertinoAlertDialog(title: const Text("الوقت المحدد غير متاح"),actions: <Widget>[
+                                                              CupertinoDialogAction(child:const Text("حسنا"),onPressed: (){
+                                                                Navigator.pop(context);
+                                                              },)
+                                                            ],));
+                                                      }
+
+                                                    }
+
+                                                    if(playgroundDetailsManager.emptyDays.contains(dateTime.weekday)){
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (c) => CupertinoAlertDialog(title: const Text("الوقت المحدد غير متاح"),actions: <Widget>[
+                                                            CupertinoDialogAction(child: const Text("حسنا"),onPressed: (){
+                                                              Navigator.pop(context);
+                                                            },)
+                                                          ],));
+                                                      return !available;
+                                                    }
+                                                    playgroundDetailsManager.addDateAndFormat(dateTime: dateTime);
+                                                    return available;
+                                                  }, context: context,
+                                                  // selectableDayPredicate: playgroundDetailsManager.emptyDays ,
+                                                  theme: ThemeData(primarySwatch: Colors.deepOrange),
+                                                  firstDate: DateTime.now(),
+                                                  lastDate: DateTime.now().add(const Duration(days: 60)),);
+
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(7),
+                                                  border: Border.all(color: AppStyle.darkOrange),
+                                                ),
+                                                child: Container(
+                                                  padding:const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text( reservationDateSnapshot.data != ""? "${reservationDateSnapshot.data}" :"اختر التاريخ",style: TextStyle(color: AppStyle.darkOrange),),
+                                                    const Icon(Icons.calendar_today_outlined,color: AppStyle.orange,size: 17,)
+                                                    ],
+
                                                   ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        ),
+
+                                        const SizedBox(
+                                          height: 25,
+                                        ),
+                                        const  Text("الوقت"),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.only(bottom: 15),
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: AppStyle.darkOrange),
+                                          ),
+                                          child: StreamBuilder<String>(
+                                              initialData: "",
+                                              stream: playgroundDetailsManager.reservationTime.stream,
+                                              builder: (context, reservationTimeSnapshot) {
+                                              return CustomAnimatedOpenTile(
+                                                headerTxt:
+                                                reservationTimeSnapshot.data != "" ? reservationTimeSnapshot.data : "اختر الوقت",
+                                                body: StreamBuilder<List<String>>(
+                                                  initialData: const [],
+                                                  stream: playgroundDetailsManager.availableHoursSubject.stream,
+                                                  builder: (context, availableHoursSnapshot) {
+                                                    return ListView.separated(
+                                                      separatorBuilder: (context, index) {
+                                                        return const Divider();
+                                                      },
+                                                      shrinkWrap: true,
+                                                      physics: const NeverScrollableScrollPhysics(),
+                                                      itemCount:
+                                                      availableHoursSnapshot.data!.length,
+                                                      itemBuilder: (_, index) => Padding(
+                                                        padding: const EdgeInsets.only(bottom: 7),
+                                                        child: InkWell(
+                                                          onTap: (){
+                                                            playgroundDetailsManager.reservationTime.sink.add(availableHoursSnapshot.data![index]);
+                                                          },
+                                                          child: Text(availableHoursSnapshot.data![index],),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
                                                 ),
                                               );
                                             }
                                           ),
-                                        );
-                                      }
+                                        ),
+                                        const SizedBox(
+                                          height: 25,
+                                        ),
+                                        MainButtonWidget(
+
+                                          horizontalPadding: 25,
+                                          title: 'حجز الملعب',
+                                          onClick: () {
+                                            if(playgroundDetailsManager.reservationTime.value == ""){
+                                              locator<ToastTemplate>().show("برجاء تحديد التاريخ والوقت اولا");
+                                            }else{
+                                              if (prefs.userObj !=
+                                                  null) {
+                                                bookingManager.booking(
+                                                    request:
+                                                    BookingRequest(
+                                                      id: args!.playgroundId,
+                                                      // cardId: playgroundDetailsSnapshot.data?.playground?.card != 'no' ? prefs.userObj?.box : '',
+                                                      count:  playgroundDetailsManager.counterSubject.value,
+                                                      date: playgroundDetailsManager.reservationDate.value,
+                                                      // optionId: offerOrDiscountManager.optionNotifier.value,
+                                                      time: playgroundDetailsManager.reservationTime.value,
+                                                      type: BookingType.playground.name,
+                                                    ));
+                                              } else {
+                                                locator<ToastTemplate>()
+                                                    .show(
+                                                    "برجاء تسجيل الدخول اولا");
+                                              }
+                                            }
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  MainButtonWidget(
 
-                                    horizontalPadding: 25,
-                                    title: 'حجز الملعب',
-                                    onClick: () {
-                                      if(playgroundDetailsManager.reservationTime.value == ""){
-                                        locator<ToastTemplate>().show("برجاء تحديد التاريخ والوقت اولا");
-                                      }
-                                    },
-                                  ),
+
                                 ],
                               ),
-                            ),
-
-
-                          ],
+                            );
+                          }
                         ),
                         if (value == ShowZoomable.show)
                           Positioned.fill(
