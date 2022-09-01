@@ -93,44 +93,69 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
               child: ListView(
                 children: [
 
-                  // ListView(
-                  //   shrinkWrap: true,
-                  //   scrollDirection: Axis.horizontal,
-                  //   children: [
-                  //
-                  //   ],
-                  // ),
                   StreamBuilder<TapeType>(
+                    initialData: TapeType(
+                        id: "All",
+                        name: "الكل"
+                    ),
                     stream: bookingHistoryManager.subject.stream,
                     builder: (context, tapesSubject) {
                       return SizedBox(
-                        height: 55,
+                        height: 50,
                         child: ListView.builder(
                             shrinkWrap: true,
                             // itemCount: widget.sliderList!.length,
                             itemCount: tapesType.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: "${tapesType[index].id}" == "${tapesSubject.data!.id}"
-                                      ? AppStyle.darkOrange
-                                      : AppStyle.lightGrey.withOpacity(0.5),
-                                  // : AppStyle.orange.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                // height: 4,
-                                // width: indexSnapshot.data == index ? 30 : 12,
-                                margin:
-                                const EdgeInsets.symmetric(horizontal: 3),
-                                // padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: Center(
-                                  child: Text("${tapesType[index].name}",style: TextStyle(color: "${tapesType[index].id}" == "${tapesSubject.data!.id}" ? Colors.white : Colors.blueGrey),),
+                              return InkWell(
+                                onTap: (){
+                                  bookingHistoryManager.subject.sink.add(tapesType[index]);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                                  decoration: BoxDecoration(
+                                    color: "${tapesType[index].id}" == "${tapesSubject.data!.id}"
+                                        ? AppStyle.darkOrange
+                                        : AppStyle.lightGrey.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  margin:
+                                  const EdgeInsets.symmetric(horizontal: 3),
+                                  child: Center(
+                                    child: Text("${tapesType[index].name}",style: TextStyle(color: "${tapesType[index].id}" == "${tapesSubject.data!.id}" ? Colors.white : Colors.blueGrey),),
+                                  ),
                                 ),
                               );
                             }),
                       );
                     }
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  StreamBuilder<TapeType>(
+                      initialData: TapeType(
+                          id: "All",
+                          name: "الكل"
+                      ),
+                      stream: bookingHistoryManager.subject.stream,
+                      builder: (context, tapesSubject) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: bookingTypes.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                padding: const EdgeInsets.all(15.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    border: Border.all(color: Colors.grey.withOpacity(.4))
+                                ),
+                                child: Text('My Awesome Border'),
+                              );
+                            });
+                      }
                   ),
                 ],
               ),
