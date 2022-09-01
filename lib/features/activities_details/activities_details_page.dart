@@ -3,6 +3,7 @@ import 'package:alsurrah/app_core/resources/app_font_styles/app_font_styles.dart
 import 'package:alsurrah/features/activities_details/activities_details_manager.dart';
 import 'package:alsurrah/features/activities_details/activities_details_response.dart';
 import 'package:alsurrah/features/booking/booking_manager.dart';
+import 'package:alsurrah/features/booking/booking_request.dart';
 import 'package:alsurrah/shared/counter_widget/counter_widget.dart';
 import 'package:alsurrah/shared/alsurrah_app_bar/alsurrah_app_bar.dart';
 import 'package:alsurrah/shared/main_button/main_button_widget.dart';
@@ -217,7 +218,27 @@ class _ActivitiesDetailsPageState extends State<ActivitiesDetailsPage> {
                                   Center(
                                       child: MainButtonWidget(
                                           title: "حجز",
-                                          onClick: () {},
+                                          onClick: () {
+                                            if (prefs.userObj != null) {
+                                              bookingManager.booking(
+                                                  request: BookingRequest(
+                                                id: args!.activityId,
+                                                cardId: activityDetailsSnapshot
+                                                            .data
+                                                            ?.activityDetails
+                                                            ?.card !=
+                                                        'no'
+                                                    ? prefs.userObj?.box
+                                                    : '',
+                                                count: activityDetailsManager
+                                                    .selectedCountValue,
+                                                type: BookingType.activity.name,
+                                              ));
+                                            } else {
+                                              locator<ToastTemplate>().show(
+                                                  "برجاء تسجيل الدخول اولا");
+                                            }
+                                          },
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
