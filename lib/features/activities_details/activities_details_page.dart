@@ -188,27 +188,41 @@ class _ActivitiesDetailsPageState extends State<ActivitiesDetailsPage> {
                                         const SizedBox(
                                           height: 15,
                                         ),
-                                        CounterWidget(
-                                          stream: activityDetailsManager
-                                              .selectedCount$,
-                                          maxCount: activityDetailsSnapshot.data
-                                                  ?.activityDetails?.count ??
-                                              0,
-                                          onDecrement: () {
-                                            activityDetailsManager
-                                                .counterSubject.sink
-                                                .add(activityDetailsManager
-                                                        .counterSubject.value -
-                                                    1);
-                                          },
-                                          onIncrement: () {
-                                            activityDetailsManager
-                                                .counterSubject.sink
-                                                .add(activityDetailsManager
-                                                        .counterSubject.value +
-                                                    1);
-                                          },
-                                        ),
+                                        activityDetailsSnapshot.data
+                                                    ?.activityDetails?.count ==
+                                                0
+                                            ? Center(
+                                                child: Text(
+                                                  "الحجز غير متاح",
+                                                  style: AppFontStyle.descFont,
+                                                ),
+                                              )
+                                            : CounterWidget(
+                                                stream: activityDetailsManager
+                                                    .selectedCount$,
+                                                maxCount:
+                                                    activityDetailsSnapshot
+                                                            .data
+                                                            ?.activityDetails
+                                                            ?.count ??
+                                                        0,
+                                                onDecrement: () {
+                                                  activityDetailsManager
+                                                      .counterSubject.sink
+                                                      .add(activityDetailsManager
+                                                              .counterSubject
+                                                              .value -
+                                                          1);
+                                                },
+                                                onIncrement: () {
+                                                  activityDetailsManager
+                                                      .counterSubject.sink
+                                                      .add(activityDetailsManager
+                                                              .counterSubject
+                                                              .value +
+                                                          1);
+                                                },
+                                              ),
                                       ],
                                     ),
                                   ),
@@ -218,27 +232,35 @@ class _ActivitiesDetailsPageState extends State<ActivitiesDetailsPage> {
                                   Center(
                                       child: MainButtonWidget(
                                           title: "حجز",
-                                          onClick: () {
-                                            if (prefs.userObj != null) {
-                                              bookingManager.booking(
-                                                  request: BookingRequest(
-                                                id: args!.activityId,
-                                                cardId: activityDetailsSnapshot
-                                                            .data
-                                                            ?.activityDetails
-                                                            ?.card !=
-                                                        'no'
-                                                    ? prefs.userObj?.box
-                                                    : '',
-                                                count: activityDetailsManager
-                                                    .selectedCountValue,
-                                                type: BookingType.activity.name,
-                                              ));
-                                            } else {
-                                              locator<ToastTemplate>().show(
-                                                  "برجاء تسجيل الدخول اولا");
-                                            }
-                                          },
+                                          onClick: activityDetailsSnapshot
+                                                      .data
+                                                      ?.activityDetails
+                                                      ?.count ==
+                                                  0
+                                              ? null
+                                              : () {
+                                                  if (prefs.userObj != null) {
+                                                    bookingManager.booking(
+                                                        request: BookingRequest(
+                                                      id: args!.activityId,
+                                                      cardId: activityDetailsSnapshot
+                                                                  .data
+                                                                  ?.activityDetails
+                                                                  ?.card !=
+                                                              'no'
+                                                          ? prefs.userObj?.box
+                                                          : '',
+                                                      count:
+                                                          activityDetailsManager
+                                                              .selectedCountValue,
+                                                      type: BookingType
+                                                          .activity.name,
+                                                    ));
+                                                  } else {
+                                                    locator<ToastTemplate>().show(
+                                                        "برجاء تسجيل الدخول اولا");
+                                                  }
+                                                },
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *

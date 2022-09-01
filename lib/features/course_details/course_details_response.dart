@@ -29,9 +29,8 @@ class Data {
   Data({this.courseDetails});
 
   Data.fromJson(Map<String, dynamic> json) {
-    courseDetails = json['course'] != null
-        ? CourseDetails.fromJson(json['course'])
-        : null;
+    courseDetails =
+        json['course'] != null ? CourseDetails.fromJson(json['course']) : null;
   }
 }
 
@@ -45,17 +44,19 @@ class CourseDetails {
   String? oldPrice;
   String? image;
   String? category;
+  String? card;
 
   CourseDetails(
       {this.id,
-        this.name,
-        this.date,
-        this.desc,
-        this.count,
-        this.category,
-        this.price,
-        this.oldPrice,
-        this.image});
+      this.name,
+      this.date,
+      this.desc,
+      this.count,
+      this.category,
+      this.price,
+      this.oldPrice,
+      this.card,
+      this.image});
 
   CourseDetails.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -67,5 +68,6 @@ class CourseDetails {
     image = json['image'];
     category = json['category'];
     oldPrice = json['old_price'];
+    card = json['card'];
   }
 }

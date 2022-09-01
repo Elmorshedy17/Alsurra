@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:alsurrah/app_core/app_core.dart';
+import 'package:alsurrah/app_core/resources/app_routes_names/app_routes_names.dart';
 import 'package:alsurrah/app_core/resources/app_style/app_style.dart';
 import 'package:alsurrah/features/booking/booking_manager.dart';
 import 'package:alsurrah/features/booking/booking_payment/payment_gatway_response.dart';
@@ -120,6 +121,11 @@ class _BookingWebViewPageState extends State<BookingWebViewPage> {
                                 // Navigator.of(context).popUntil(
                                 //     ModalRoute.withName(AppRoutesNames
                                 //         .makeAppointmentPage));
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    AppRoutesNames.mainTabsWidget,
+                                    (Route<dynamic> route) => false);
+                                locator<ToastTemplate>()
+                                    .show("${result.message}");
                               } else {
                                 // Navigator.of(context).pushReplacementNamed(
                                 //   AppRoutesNames.PaymentStatusPage,
@@ -134,6 +140,9 @@ class _BookingWebViewPageState extends State<BookingWebViewPage> {
                                 // Navigator.of(context).popUntil(
                                 //     ModalRoute.withName(AppRoutesNames
                                 //         .makeAppointmentPage));
+                                Navigator.of(context).pop();
+                                locator<ToastTemplate>().show(result.message ??
+                                    'حدث خطأ يرجى المحاولة في وقت لاحق');
                               }
                             });
                           }
