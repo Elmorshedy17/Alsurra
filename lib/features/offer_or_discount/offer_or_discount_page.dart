@@ -1,9 +1,12 @@
 import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/app_core/resources/app_font_styles/app_font_styles.dart';
 import 'package:alsurrah/app_core/resources/app_style/app_style.dart';
+import 'package:alsurrah/features/booking/booking_manager.dart';
+import 'package:alsurrah/features/booking/booking_request.dart';
 import 'package:alsurrah/features/offer_or_discount/offer_or_discount_manager.dart';
 import 'package:alsurrah/features/offer_or_discount/offer_or_discount_response.dart';
 import 'package:alsurrah/shared/alsurrah_app_bar/alsurrah_app_bar.dart';
+import 'package:alsurrah/shared/counter_widget/counter_widget.dart';
 import 'package:alsurrah/shared/main_button/main_button_widget.dart';
 import 'package:alsurrah/shared/network_app_image/network_app_image.dart';
 import 'package:alsurrah/shared/remove_focus/remove_focus.dart';
@@ -32,7 +35,7 @@ class OfferOrDiscountPage extends StatefulWidget {
 class _OfferOrDiscountPageState extends State<OfferOrDiscountPage> {
   String selectedImage = '';
 
-  final _familyCardTextEditing = TextEditingController();
+  // final _familyCardTextEditing = TextEditingController();
 
   OfferOrDiscountArgs? args;
   @override
@@ -53,6 +56,8 @@ class _OfferOrDiscountPageState extends State<OfferOrDiscountPage> {
   @override
   Widget build(BuildContext context) {
     final offerOrDiscountManager = context.use<OfferOrDiscountManager>();
+    final prefs = context.use<PrefsService>();
+    final bookingManager = context.use<BookingManager>();
 
     if (args == null) {
       args = ModalRoute.of(context)!.settings.arguments as OfferOrDiscountArgs;
@@ -93,156 +98,209 @@ class _OfferOrDiscountPageState extends State<OfferOrDiscountPage> {
                     builder: (context, value, _) {
                       return Stack(
                         children: [
-                          ListView(
-                            children: [
-                              InkWell(
-                                onTap: (){
-                                  selectedImage = '${offerOrDiscountSnapshot.data!.discount!.image}';
-                                  offerOrDiscountManager.showZoomable =
-                                      ShowZoomable.show;
-                                },
-                                child: NetworkAppImage(
-                                  height: 300.h,
-                                  width: double.infinity,
-                                  boxFit: BoxFit.fill,
-                                  imageUrl:
-                                  '${offerOrDiscountSnapshot.data!.discount!.image}',
-                                  // imageUrl: '${e}',
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          StreamBuilder<ManagerState>(
+                              initialData: ManagerState.idle,
+                              stream: bookingManager.state$,
+                              builder: (context,
+                                  AsyncSnapshot<ManagerState> stateSnapshot) {
+                                return FormsStateHandling(
+                                  managerState: stateSnapshot.data,
+                                  errorMsg: bookingManager.errorDescription,
+                                  onClickCloseErrorBtn: () {
+                                    bookingManager.inState.add(ManagerState.idle);
+                                  },
+                                child: ListView(
                                   children: [
-                                    const SizedBox(
-                                      height: 25,
-                                    ),
-                                    Text(
-                                      '${offerOrDiscountSnapshot.data!.discount?.name}',
-                                      style: AppFontStyle.biggerBlueLabel,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'التاريخ : ${offerOrDiscountSnapshot.data!.discount?.date}',
-                                      style: AppFontStyle.descFont.copyWith(
-                                          fontWeight: FontWeight.normal, fontSize: 13),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '${offerOrDiscountSnapshot.data?.discount?.price}',
-                                          style: AppFontStyle.darkGreyLabel
-                                              .copyWith(color: Colors.black),
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          'بدلا من',
-                                          style: AppFontStyle.darkGreyLabel
-                                              .copyWith(color: Colors.black),
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          '${offerOrDiscountSnapshot.data?.discount?.oldPrice}',
-                                          style: AppFontStyle.darkGreyLabel.copyWith(
-                                            color: Colors.black.withOpacity(.6),
-                                            decoration: TextDecoration.lineThrough,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Text(
-                                    //   '${offerOrDiscountSnapshot.data!.discount?.price}',
-                                    //   style: AppFontStyle.darkGreyLabel,
-                                    // ),
-                                    const Divider(
-                                      height: 30,
-                                    ),
-                                    Text(
-                                      'المدة : ${offerOrDiscountSnapshot.data!.discount?.duration}',
-                                      style: AppFontStyle.descFont.copyWith(
-                                          fontWeight: FontWeight.normal, fontSize: 12),
-                                    ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      'العنوان : ${offerOrDiscountSnapshot.data!.discount?.address}',
-                                      style: AppFontStyle.descFont.copyWith(
-                                          fontWeight: FontWeight.normal, fontSize: 12),
-                                    ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      'الشروط : ${offerOrDiscountSnapshot.data!.discount?.conditions}',
-                                      style: AppFontStyle.descFont.copyWith(
-                                          fontWeight: FontWeight.normal, fontSize: 12),
-                                    ),
-                                    Html(
-                                      data:
-                                      '${offerOrDiscountSnapshot.data!.discount?.desc}',
-                                    ),
-                                    if (offerOrDiscountSnapshot.data!.discount?.card ==
-                                        "yes")
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 15),
-                                        child: Theme(
-                                          data: ThemeData(
-                                            primaryColor: Colors.redAccent,
-                                            primaryColorDark: Colors.red,
-                                          ),
-                                          child: TextField(
-                                            controller: _familyCardTextEditing,
-                                            decoration: const InputDecoration(
-                                              contentPadding: EdgeInsets.all(8),
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: AppStyle.darkOrange,
-                                                  )),
-                                              hintText: 'رقم كارت العائلة',
-                                              helperText:
-                                              'برجاء ادخال رقم كارت العائلة لاستكمال الحجز',
-                                              labelText: 'كارت العائلة',
-                                              prefixIcon: Icon(
-                                                Icons.people,
-                                                color: AppStyle.darkOrange,
-                                              ),
-                                              prefixText: ' ',
-                                            ),
-                                          ),
-                                        ),
+                                    InkWell(
+                                      onTap: (){
+                                        selectedImage = '${offerOrDiscountSnapshot.data!.discount!.image}';
+                                        offerOrDiscountManager.showZoomable =
+                                            ShowZoomable.show;
+                                      },
+                                      child: NetworkAppImage(
+                                        height: 300.h,
+                                        width: double.infinity,
+                                        boxFit: BoxFit.fill,
+                                        imageUrl:
+                                        '${offerOrDiscountSnapshot.data!.discount!.image}',
+                                        // imageUrl: '${e}',
                                       ),
-                                    const SizedBox(
-                                      height: 35,
                                     ),
-                                    Center(
-                                        child: MainButtonWidget(
-                                            title: "حجز",
-                                            onClick: () {
-                                              if (offerOrDiscountSnapshot
-                                                  .data!.discount?.card ==
-                                                  "yes" &&
-                                                  _familyCardTextEditing.text.isEmpty) {
-                                                locator<ToastTemplate>()
-                                                    .show("برجاء ادخال رقم كارت العائلة");
-                                              }
-                                            },
-                                            width: MediaQuery.of(context).size.width * .85))
+                                    Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 25,
+                                          ),
+                                          Text(
+                                            '${offerOrDiscountSnapshot.data!.discount?.name}',
+                                            style: AppFontStyle.biggerBlueLabel,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'التاريخ : ${offerOrDiscountSnapshot.data!.discount?.date}',
+                                            style: AppFontStyle.descFont.copyWith(
+                                                fontWeight: FontWeight.normal, fontSize: 13),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '${offerOrDiscountSnapshot.data?.discount?.price}',
+                                                style: AppFontStyle.darkGreyLabel
+                                                    .copyWith(color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                'بدلا من',
+                                                style: AppFontStyle.darkGreyLabel
+                                                    .copyWith(color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '${offerOrDiscountSnapshot.data?.discount?.oldPrice}',
+                                                style: AppFontStyle.darkGreyLabel.copyWith(
+                                                  color: Colors.black.withOpacity(.6),
+                                                  decoration: TextDecoration.lineThrough,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          // Text(
+                                          //   '${offerOrDiscountSnapshot.data!.discount?.price}',
+                                          //   style: AppFontStyle.darkGreyLabel,
+                                          // ),
+                                          const Divider(
+                                            height: 30,
+                                          ),
+                                          Text(
+                                            'المدة : ${offerOrDiscountSnapshot.data!.discount?.duration}',
+                                            style: AppFontStyle.descFont.copyWith(
+                                                fontWeight: FontWeight.normal, fontSize: 12),
+                                          ),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            'العنوان : ${offerOrDiscountSnapshot.data!.discount?.address}',
+                                            style: AppFontStyle.descFont.copyWith(
+                                                fontWeight: FontWeight.normal, fontSize: 12),
+                                          ),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            'الشروط : ${offerOrDiscountSnapshot.data!.discount?.conditions}',
+                                            style: AppFontStyle.descFont.copyWith(
+                                                fontWeight: FontWeight.normal, fontSize: 12),
+                                          ),
+                                          Html(
+                                            data:
+                                            '${offerOrDiscountSnapshot.data!.discount?.desc}',
+                                          ),
+                                          if (offerOrDiscountSnapshot.data!.discount?.card ==
+                                              "yes")
+                                            // Padding(
+                                            //   padding: const EdgeInsets.only(top: 15),
+                                            //   child: Theme(
+                                            //     data: ThemeData(
+                                            //       primaryColor: Colors.redAccent,
+                                            //       primaryColorDark: Colors.red,
+                                            //     ),
+                                            //     child: TextField(
+                                            //       controller: _familyCardTextEditing,
+                                            //       decoration: const InputDecoration(
+                                            //         contentPadding: EdgeInsets.all(8),
+                                            //         border: OutlineInputBorder(
+                                            //             borderSide: BorderSide(
+                                            //               color: AppStyle.darkOrange,
+                                            //             )),
+                                            //         hintText: 'رقم كارت العائلة',
+                                            //         helperText:
+                                            //         'برجاء ادخال رقم كارت العائلة لاستكمال الحجز',
+                                            //         labelText: 'كارت العائلة',
+                                            //         prefixIcon: Icon(
+                                            //           Icons.people,
+                                            //           color: AppStyle.darkOrange,
+                                            //         ),
+                                            //         prefixText: ' ',
+                                            //       ),
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                          offerOrDiscountSnapshot.data!.discount!.count == 0 ? Container() :  Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 35,
+                                              ),
+                                              CounterWidget(
+                                                stream: offerOrDiscountManager.selectedCount$,
+                                                maxCount:  offerOrDiscountSnapshot.data!.discount!.count!,
+
+                                                onDecrement: () {
+                                                  offerOrDiscountManager.counterSubject.sink.add(
+                                                      offerOrDiscountManager.counterSubject.value - 1);
+                                                },
+                                                onIncrement: () {
+                                                  offerOrDiscountManager.counterSubject.sink.add(
+                                                      offerOrDiscountManager.counterSubject.value + 1);
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                height: 35,
+                                              ),
+                                            ],
+                                          ),
+
+                                          Center(
+                                              child: MainButtonWidget(
+                                                  title: offerOrDiscountSnapshot.data!.discount!.count == 0 ? "الحجز غير متاح" : "حجز",
+                                                  onClick: offerOrDiscountSnapshot.data!.discount!.count == 0 ? null : () {
+                                                    // if (offerOrDiscountSnapshot
+                                                    //     .data!.discount?.card ==
+                                                    //     "yes" &&
+                                                    //     _familyCardTextEditing.text.isEmpty) {
+                                                    //   locator<ToastTemplate>()
+                                                    //       .show("برجاء ادخال رقم كارت العائلة");
+                                                    // }
+                                                    if (prefs.userObj !=
+                                                        null) {
+                                                      bookingManager.booking(
+                                                          request:
+                                                          BookingRequest(
+                                                            id: args!.offerOrDiscountId,
+                                                            cardId: offerOrDiscountSnapshot.data?.discount?.card != 'no' ? prefs.userObj?.box : '',
+                                                            count:  offerOrDiscountManager.counterSubject.value,
+                                                            // date: HotelOrChaletManager.getFormattedDate(hotelOrChaletManager.selectedDate),
+                                                            // optionId: offerOrDiscountManager.optionNotifier.value,
+                                                            time: '',
+                                                            type: BookingType.hotel.name,
+                                                          ));
+                                                    } else {
+                                                      locator<ToastTemplate>()
+                                                          .show(
+                                                          "برجاء تسجيل الدخول اولا");
+                                                    }
+                                                  },
+                                                  width: MediaQuery.of(context).size.width * .85))
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                              )
-                            ],
+                              );
+                            }
                           ),
                           if (value == ShowZoomable.show)
                             Positioned.fill(

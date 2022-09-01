@@ -64,6 +64,7 @@ class Discount {
   String? price;
   String? oldPrice;
   String? image;
+  int? count;
 
   Discount(
       {this.id,
@@ -76,6 +77,7 @@ class Discount {
         this.card,
         this.oldPrice,
         this.price,
+        this.count,
         this.image});
 
   Discount.fromJson(Map<String, dynamic> json) {
@@ -90,6 +92,7 @@ class Discount {
     price = json['price'];
     oldPrice = json['old_price'];
     image = json['image'];
+    count = json['count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -105,6 +108,7 @@ class Discount {
     data['price'] = this.price;
     data['old_price'] = this.oldPrice;
     data['image'] = this.image;
+    data['count'] = this.count;
     return data;
   }
 }
