@@ -121,9 +121,11 @@ class _BookingWebViewPageState extends State<BookingWebViewPage> {
                                 // Navigator.of(context).popUntil(
                                 //     ModalRoute.withName(AppRoutesNames
                                 //         .makeAppointmentPage));
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    AppRoutesNames.mainTabsWidget,
-                                    (Route<dynamic> route) => false);
+                                // Navigator.of(context).pushNamedAndRemoveUntil(
+                                //     AppRoutesNames.mainTabsWidget,
+                                //     (Route<dynamic> route) => false);
+                                Navigator.of(context).pop();
+
                                 locator<ToastTemplate>()
                                     .show("${result.message}");
                               } else {
