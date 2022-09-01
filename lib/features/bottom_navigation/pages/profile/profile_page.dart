@@ -56,7 +56,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       SettingsItem(
                         title: "حجوزاتي",
-                        onClick: () {},
+                        onClick: () {
+                          locator<NavigationService>().pushNamedTo(
+                            AppRoutesNames.bookingHistoryPage,
+                          );
+                        },
                       ),
                     ],
                   ),
