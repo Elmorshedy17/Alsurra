@@ -2,34 +2,28 @@ import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/features/activities_details/activities_details_repo.dart';
 import 'package:alsurrah/features/activities_details/activities_details_response.dart';
 import 'package:alsurrah/features/booking_history/booking_history_page.dart';
+import 'package:alsurrah/features/booking_history/booking_history_repo.dart';
+import 'package:alsurrah/features/booking_history/booking_history_response.dart';
 import 'package:alsurrah/shared/show_zoomable_enum/show_zoomable_enum.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-class BookingHistoryManager extends Manager<ActivityDetailsResponse> {
-  final PublishSubject<TapeType> subject =
-  PublishSubject<TapeType>();
+class BookingHistoryManager extends Manager<BookingHistoryResponse> {
+  final PublishSubject<TapeType> subject = PublishSubject<TapeType>();
 
+  final PublishSubject<BookingHistoryResponse> _subject =
+      PublishSubject<BookingHistoryResponse>();
 
-  // final BehaviorSubject<int> counterSubject = BehaviorSubject<int>.seeded(0);
-  //
-  // Stream<int> get selectedCount$ => counterSubject.stream;
-  //
-  // set inSelectedCount(int selected) => counterSubject.sink.add(selected);
-  //
-  // get selectedCountValue => counterSubject.value;
-  //
-  // execute({required int activityId}) {
-  //   Stream.fromFuture(
-  //       ActivityDetailsRepo.activityDetails(activityId: activityId))
-  //       .listen((result) {
-  //     if (result.error == null) {
-  //       _subject.sink.add(result);
-  //     } else {
-  //       _subject.sink.addError(result.error);
-  //     }
-  //   });
-  // }
+  Stream<BookingHistoryResponse> get bookingHistory$$ => _subject.stream;
+
+  execute() async {
+    await BookingHistoryRepo.bookingHistory().then((result) {
+      if (result.error == null) {
+        _subject.sink.add(result);
+      } else {
+        _subject.sink.addError(result.error);
+      }
+    });
+  }
   //
   // //****************************************************************************
   // final ValueNotifier<ShowZoomable> _showZoomableNotifier =
