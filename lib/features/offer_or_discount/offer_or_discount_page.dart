@@ -63,6 +63,8 @@ class _OfferOrDiscountPageState extends State<OfferOrDiscountPage> {
       args = ModalRoute.of(context)!.settings.arguments as OfferOrDiscountArgs;
       locator<OfferOrDiscountManager>()
           .execute(offerOrDiscountId: args!.offerOrDiscountId);
+      locator<OfferOrDiscountManager>().counterSubject.sink.add(1);
+
     }
 
     return GestureDetector(
@@ -211,6 +213,11 @@ class _OfferOrDiscountPageState extends State<OfferOrDiscountPage> {
                                           ),
                                           if (offerOrDiscountSnapshot.data!.discount?.card ==
                                               "yes")
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 15),
+                                              child: Text("رقم كارت العائلة : ${prefs.userObj?.box}",style: AppFontStyle.descFont.copyWith(color: AppStyle.darkOrange.withOpacity(.5)),),
+                                            ),
+
                                             // Padding(
                                             //   padding: const EdgeInsets.only(top: 15),
                                             //   child: Theme(

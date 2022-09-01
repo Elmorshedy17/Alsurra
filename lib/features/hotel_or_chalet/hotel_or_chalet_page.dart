@@ -44,7 +44,7 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
       if (args != null) {
         locator<HotelOrChaletManager>()
             .execute(hotelOrChaletId: args!.hotelOrChaletId);
-        locator<HotelOrChaletManager>().counterSubject.sink.add(0);
+        locator<HotelOrChaletManager>().counterSubject.sink.add(1);
 
       }
       locator<HotelOrChaletManager>().resetDate();
@@ -199,6 +199,12 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
                                             data:
                                                 '${hotelOrChaletSnapshot.data!.hotel?.desc}',
                                           ),
+                                          if (hotelOrChaletSnapshot.data!.hotel?.card ==
+                                              "yes")
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 15),
+                                              child: Text("رقم كارت العائلة : ${prefs.userObj?.box}",style: AppFontStyle.descFont.copyWith(color: AppStyle.darkOrange.withOpacity(.5)),),
+                                            ),
                                           const SizedBox(
                                             height: 25,
                                           ),
@@ -262,7 +268,12 @@ class _HotelOrChaletPageState extends State<HotelOrChaletPage> {
                                                             maxCount = hotelOrChaletSnapshot.data!.hotel!.options![index]!.count!;
                                                             hotelOrChaletManager.maxSubject.sink.add(hotelOrChaletSnapshot.data!.hotel!.options![index]!.count!);
                                                             // hotelOrChaletManager.maxSubject.sink.add(hotelOrChaletSnapshot.data!.hotel!.options![index]!.count!);
-                                                            hotelOrChaletManager.counterSubject.sink.add(0);
+                                                            if(hotelOrChaletSnapshot.data!.hotel!.options![index]!.count! == 0){
+                                                              hotelOrChaletManager.counterSubject.sink.add(0);
+                                                            }else{
+                                                              hotelOrChaletManager.counterSubject.sink.add(1);
+                                                            }
+
 
                                                           },
                                                           child: Row(

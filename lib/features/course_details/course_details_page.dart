@@ -1,5 +1,6 @@
 import 'package:alsurrah/app_core/app_core.dart';
 import 'package:alsurrah/app_core/resources/app_font_styles/app_font_styles.dart';
+import 'package:alsurrah/app_core/resources/app_style/app_style.dart';
 import 'package:alsurrah/features/booking/booking_manager.dart';
 import 'package:alsurrah/features/booking/booking_request.dart';
 import 'package:alsurrah/features/course_details/course_details_manager.dart';
@@ -200,6 +201,12 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
                                           data:
                                               '${courseDetailsSnapshot.data?.courseDetails?.desc}',
                                         ),
+                                        if (courseDetailsSnapshot.data!.courseDetails?.card ==
+                                            "yes")
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 15),
+                                            child: Text("رقم كارت العائلة : ${prefs.userObj?.box}",style: AppFontStyle.descFont.copyWith(color: AppStyle.darkOrange.withOpacity(.5)),),
+                                          ),
                                         const SizedBox(
                                           height: 15,
                                         ),
