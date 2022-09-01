@@ -6,6 +6,7 @@ import 'package:alsurrah/features/ads/ads_page.dart';
 import 'package:alsurrah/features/app_settings/fix/fix_page.dart';
 import 'package:alsurrah/features/barcode/barcode_page.dart';
 import 'package:alsurrah/features/booking/booking_payment/booking_web_view.dart';
+import 'package:alsurrah/features/booking_history/booking_history_page.dart';
 import 'package:alsurrah/features/bottom_navigation/main_tabs_widget.dart';
 import 'package:alsurrah/features/bottom_navigation/pages/family_card/family_card_page.dart';
 import 'package:alsurrah/features/bottom_navigation/pages/family_card/family_card_result_page/family_card_result_page.dart';
@@ -80,5 +81,6 @@ class Routes {
     AppRoutesNames.profitsPage: (_) => const ProfitsPage(),
     AppRoutesNames.profitsResultsPage: (_) => const ProfitsResultsPage(),
     AppRoutesNames.bookingWebViewPage: (_) => const BookingWebViewPage(),
+    AppRoutesNames.bookingHistoryPage: (_) => const BookingHistoryPage(),
   };
 }

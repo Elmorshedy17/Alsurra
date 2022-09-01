@@ -39,4 +39,5 @@ abstract class AppRoutesNames {
   static const String profitsPage = '/profitsPage';
   static const String profitsResultsPage = '/profitsResultsPage';
   static const String bookingWebViewPage = '/bookingWebViewPage';
+  static const String bookingHistoryPage = '/bookingHistoryPage';
 }

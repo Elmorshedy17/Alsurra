@@ -9,6 +9,7 @@ import 'package:alsurrah/app_core/fcm/pushNotification_service.dart';
 import 'package:alsurrah/app_core/resources/app_routes/routes.dart';
 import 'package:alsurrah/app_core/resources/app_style/app_style.dart';
 import 'package:alsurrah/features/app_settings/app_start_page.dart';
+import 'package:alsurrah/features/booking_history/booking_history_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -252,7 +253,7 @@ class _alsurrahState extends State<alsurrah> {
               },
 
               // home: const IntroPage(),
-              home: const AppStartPage(),
+              home: const BookingHistoryPage(),
 
               routes: Routes.routes,
             ),
