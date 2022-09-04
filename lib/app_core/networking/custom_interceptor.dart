@@ -15,8 +15,8 @@ class CustomInterceptor implements Interceptor {
       //     : 'guest',
       'Platform': Platform.isAndroid ? 'android' : 'ios',
       'Lang': locator<PrefsService>().appLanguage,
-      // 'Auth': locator<PrefsService>().userObj?.authorization ?? '',
-      'Auth': '\$2y\$10\$0hfWGXTtDjp41ytCwX0whuUA7Xp7ltmLUXBSHmwa3yrAqIGnPlKye',
+      'Auth': locator<PrefsService>().userObj?.authorization ?? '',
+      // 'Auth': '\$2y\$10\$0hfWGXTtDjp41ytCwX0whuUA7Xp7ltmLUXBSHmwa3yrAqIGnPlKye',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
